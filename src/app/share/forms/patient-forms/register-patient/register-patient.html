@@ -1,0 +1,209 @@
+<section
+  class="fixed inset-0 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+>
+  <!-- Notificación de éxito -->
+  @if (successMessage()) {
+  <div
+    class="fixed top-4 right-4 z-[60] bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 animate-fade-in"
+  >
+    <i class="fa-solid fa-check-circle text-xl"></i>
+    <span class="font-medium">{{ successMessage() }}</span>
+  </div>
+  }
+
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] overflow-hidden"
+  >
+    <!-- Header -->
+    <div
+      class="px-6 py-4 border-b border-gray-200 flex items-center justify-between"
+    >
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">Historia Clínica</h2>
+        <p class="text-sm text-gray-500">
+          Complete la información del paciente paso a paso
+        </p>
+      </div>
+      <button
+        class="text-gray-400 hover:text-gray-600 transition-colors"
+        (click)="onClose()"
+      >
+        <i class="fa-solid fa-xmark text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="flex h-[calc(90vh-73px)]">
+      <!-- Stepper -->
+      <div class="w-80 border-r border-gray-200 p-6 overflow-y-auto">
+        <ol class="space-y-3">
+          <!-- 1. General -->
+          <li>
+            <button
+              (click)="selectStep('general')"
+              class="w-full p-4 text-left rounded-lg border transition-colors"
+              [class.bg-blue-50]="currentStep() === 'general'"
+              [class.border-blue-300]="currentStep() === 'general'"
+              [class.text-blue-800]="currentStep() === 'general'"
+              [class.hover:bg-blue-100]="currentStep() === 'general'"
+              [class.bg-white]="currentStep() !== 'general'"
+              [class.border-gray-200]="currentStep() !== 'general'"
+              [class.text-gray-800]="currentStep() !== 'general'"
+              [class.hover:bg-gray-50]="currentStep() !== 'general'"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-medium">1. Información General</h3>
+                  <p
+                    class="text-xs mt-1"
+                    [class.text-blue-600]="currentStep() === 'general'"
+                    [class.text-gray-500]="currentStep() !== 'general'"
+                  >
+                    Datos personales básicos
+                  </p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-blue-500"></i>
+              </div>
+            </button>
+          </li>
+
+          <!-- 2. Somatometría -->
+          <li>
+            <button
+              (click)="selectStep('somatometria')"
+              class="w-full p-4 text-left rounded-lg border transition-colors"
+              [class.bg-blue-50]="currentStep() === 'somatometria'"
+              [class.border-blue-300]="currentStep() === 'somatometria'"
+              [class.text-blue-800]="currentStep() === 'somatometria'"
+              [class.hover:bg-blue-100]="currentStep() === 'somatometria'"
+              [class.bg-white]="currentStep() !== 'somatometria'"
+              [class.border-gray-200]="currentStep() !== 'somatometria'"
+              [class.text-gray-800]="currentStep() !== 'somatometria'"
+              [class.hover:bg-gray-50]="currentStep() !== 'somatometria'"
+              [disabled]="!patientId()"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-medium">2. Somatometría</h3>
+                  <p
+                    class="text-xs mt-1"
+                    [class.text-blue-600]="currentStep() === 'somatometria'"
+                    [class.text-gray-500]="currentStep() !== 'somatometria'"
+                  >
+                    Peso, talla, IMC, etc.
+                  </p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-blue-500"></i>
+              </div>
+            </button>
+          </li>
+
+          <!-- 3. Heredofamiliares -->
+          <li>
+            <button
+              (click)="selectStep('heredofamiliares')"
+              class="w-full p-4 text-left rounded-lg border transition-colors"
+              [class.bg-blue-50]="currentStep() === 'heredofamiliares'"
+              [class.border-blue-300]="currentStep() === 'heredofamiliares'"
+              [class.text-blue-800]="currentStep() === 'heredofamiliares'"
+              [class.hover:bg-blue-100]="currentStep() === 'heredofamiliares'"
+              [class.bg-white]="currentStep() !== 'heredofamiliares'"
+              [class.border-gray-200]="currentStep() !== 'heredofamiliares'"
+              [class.text-gray-800]="currentStep() !== 'heredofamiliares'"
+              [class.hover:bg-gray-50]="currentStep() !== 'heredofamiliares'"
+              [disabled]="!patientId()"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-medium">3. Antecedentes Heredofamiliares</h3>
+                  <p
+                    class="text-xs mt-1"
+                    [class.text-blue-600]="currentStep() === 'heredofamiliares'"
+                    [class.text-gray-500]="currentStep() !== 'heredofamiliares'"
+                  >
+                    Historial familiar de enfermedades
+                  </p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-blue-500"></i>
+              </div>
+            </button>
+          </li>
+
+          <!-- 4. No patológicos -->
+          <li>
+            <button
+              (click)="selectStep('no-patologicos')"
+              class="w-full p-4 text-left rounded-lg border transition-colors"
+              [class.bg-blue-50]="currentStep() === 'no-patologicos'"
+              [class.border-blue-300]="currentStep() === 'no-patologicos'"
+              [class.text-blue-800]="currentStep() === 'no-patologicos'"
+              [class.hover:bg-blue-100]="currentStep() === 'no-patologicos'"
+              [class.bg-white]="currentStep() !== 'no-patologicos'"
+              [class.border-gray-200]="currentStep() !== 'no-patologicos'"
+              [class.text-gray-800]="currentStep() !== 'no-patologicos'"
+              [class.hover:bg-gray-50]="currentStep() !== 'no-patologicos'"
+              [disabled]="!patientId()"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-medium">4. Antecedentes No Patológicos</h3>
+                  <p
+                    class="text-xs mt-1"
+                    [class.text-blue-600]="currentStep() === 'no-patologicos'"
+                    [class.text-gray-500]="currentStep() !== 'no-patologicos'"
+                  >
+                    Hábitos y estilo de vida
+                  </p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-blue-500"></i>
+              </div>
+            </button>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Panel derecho -->
+      <div class="flex-1 p-6 overflow-y-auto">
+        @if (currentStep() === 'general') {
+        <form-basic-info
+          [patient]="patient()"
+          (saved)="onBasicInfoSaved($event)"
+        />
+        } @if (currentStep() === 'somatometria' && patientId()) {
+        <vitals-form [patientId]="patientId()!" (saved)="onVitalsSaved($event)" />
+        } @if (currentStep() === 'heredofamiliares' && patientId()) {
+        <form-family-history
+          [patientId]="patientId()!"
+          [initialData]="medicalHistory()?.family_history ?? null"
+          (saved)="onFamilyHistorySaved()"
+        />
+        } @if (currentStep() === 'no-patologicos' && patientId()) {
+        <form-personal-habits
+          [patientId]="patientId()!"
+          [initialData]="medicalHistory()?.personal_habits ?? null"
+          (saved)="onPersonalHabitsSaved()"
+        />
+        }
+
+        <div class="flex justify-between mt-8 pt-6 border-t border-gray-200">
+          <button
+            type="button"
+            class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            (click)="goPrev()"
+          >
+            <i class="fa-solid fa-arrow-left mr-2"></i>
+            Anterior
+          </button>
+          <button
+            type="button"
+            class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            (click)="goNext()"
+          >
+            Siguiente
+            <i class="fa-solid fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,153 @@
+<section class="h-full w-full grid grid-cols-4 gap-0 relative">
+  <div class="col-span-1 p-2 border-r border-gray-300 overflow-hidden">
+    <article class="flex flex-col flex-1 overflow-y-auto">
+      @if (loading()) {
+      <div class="flex justify-center items-center py-8">
+        <div class="text-gray-500 text-sm">Cargando incapacidades...</div>
+      </div>
+      } @else if (error()) {
+      <div class="flex justify-center items-center py-8">
+        <div class="text-red-500 text-sm">{{ error() }}</div>
+      </div>
+      } @else if (incapacities().length === 0) {
+      <div class="flex justify-center items-center py-8">
+        <div class="text-gray-500 text-sm">Sin incapacidades registradas</div>
+      </div>
+      } @else {
+      <ul class="divide-y divide-gray-200">
+        @for (it of incapacities(); track it.id) {
+        <li
+          class="p-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center transition-colors"
+          (click)="selectIncapacity(it)"
+          [class.bg-blue-50]="selectedIncapacityId() === it.id"
+        >
+          <span class="text-sm text-gray-700">
+            {{ it.created_at | ItemDate }}
+          </span>
+          <span class="text-xs text-gray-400"> #{{ it.id }} </span>
+        </li>
+        }
+      </ul>
+      }
+    </article>
+  </div>
+
+  <div class="col-span-3 p-4 overflow-y-scroll">
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <div class="flex flex-col">
+          <h3 class="text-2xl font-bold text-gray-900">Incapacidades</h3>
+          @if (patientFullName()) {
+          <div class="text-sm text-gray-600">{{ patientFullName() }}</div>
+          }
+        </div>
+      </div>
+
+      <div class="border border-gray-200 bg-white rounded-lg p-4">
+        <h4 class="font-semibold text-gray-800 mb-3">Registrar incapacidad</h4>
+
+        <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex flex-col">
+            <label class="text-sm text-gray-600 mb-1">Incapacidad por</label>
+            <select
+              formControlName="incapacity_for"
+              class="block w-full px-3 py-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="" disabled>Seleccione...</option>
+              <option value="Por Accidente de Trabajo">Por Accidente de Trabajo</option>
+              <option value="Por Enfermedad General">Por Enfermedad General</option>
+            </select>
+          </div>
+
+          <div class="flex flex-col">
+            <label class="text-sm text-gray-600 mb-1">Tipo de incapacidad</label>
+            <input
+              type="text"
+              formControlName="incapacity_type"
+              class="block w-full px-3 py-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Ej. Temporal"
+            />
+          </div>
+
+          <div class="flex flex-col md:col-span-2">
+            <label class="text-sm text-gray-600 mb-1">Motivo</label>
+            <textarea
+              rows="4"
+              formControlName="reason"
+              class="block w-full px-3 py-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Describa el motivo..."
+            ></textarea>
+          </div>
+
+          <div class="md:col-span-2 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              (click)="save()"
+              class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-50"
+              [disabled]="saving()"
+            >
+              Guardar
+            </button>
+          </div>
+        </form>
+
+        @if (error()) {
+        <div class="mt-3 text-sm text-red-500">{{ error() }}</div>
+        }
+      </div>
+
+      <div class="border border-gray-200 bg-white rounded-lg p-4">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex flex-col">
+            <h4 class="font-semibold text-gray-800">Detalles de la incapacidad</h4>
+            @if (patientFullName()) {
+            <div class="text-sm text-gray-600">{{ patientFullName() }}</div>
+            }
+          </div>
+          <button
+            type="button"
+            (click)="deleteSelected()"
+            class="px-3 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 disabled:opacity-50"
+            [disabled]="!selectedIncapacity() || deleting()"
+          >
+            Eliminar
+          </button>
+        </div>
+
+        @if (selectedIncapacity()) {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex flex-col">
+            <div class="text-xs text-gray-500">Fecha</div>
+            <div class="text-sm text-gray-900 font-medium">
+              {{ selectedIncapacity()!.created_at | ItemDate }}
+            </div>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="text-xs text-gray-500">Incapacidad por</div>
+            <div class="text-sm text-gray-900 font-medium">
+              {{ selectedIncapacity()!.incapacity_for || '-' }}
+            </div>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="text-xs text-gray-500">Tipo de incapacidad</div>
+            <div class="text-sm text-gray-900 font-medium">
+              {{ selectedIncapacity()!.incapacity_type }}
+            </div>
+          </div>
+
+          <div class="flex flex-col md:col-span-2">
+            <div class="text-xs text-gray-500">Motivo</div>
+            <div class="text-sm text-gray-900 whitespace-pre-wrap">
+              {{ selectedIncapacity()!.reason || '-' }}
+            </div>
+          </div>
+        </div>
+        } @else {
+        <div class="text-sm text-gray-500">Selecciona una incapacidad de la lista para ver los detalles.</div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

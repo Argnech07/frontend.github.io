@@ -1,0 +1,307 @@
+@if (loading()) {
+<div class="flex flex-col h-full">
+  <h3 class="mb-6 text-2xl font-bold text-gray-900 opacity-0">Preview</h3>
+  <div class="flex-1 border border-gray-200 bg-white rounded-lg p-6">
+    <div class="h-full flex items-center justify-center">
+      <div class="text-center text-gray-400">
+        <svg
+          class="w-16 h-16 mx-auto mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+        <p class="text-lg font-medium">Seleccione un estudio</p>
+        <p class="text-sm mt-2">
+          Haga clic en un estudio de la lista para ver los detalles
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+} @else if (!selectedStudyItem()) {
+<div class="flex flex-col h-full">
+  <h3 class="mb-6 text-2xl font-bold text-gray-900 opacity-0">Preview</h3>
+  <div class="flex-1 border border-gray-200 bg-white rounded-lg p-6">
+    <div class="h-full flex items-center justify-center">
+      <div class="text-center text-gray-400">
+        <svg
+          class="w-16 h-16 mx-auto mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+        <p class="text-lg font-medium">Seleccione un estudio</p>
+        <p class="text-sm mt-2">
+          Haga clic en un estudio de la lista para ver los detalles
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+} @else { @let item = selectedStudyItem()!;
+<div class="flex flex-col h-full">
+  <div class="flex-1 border border-gray-200 bg-white rounded-lg p-6">
+    <!-- Header de información -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ item.name }}</h1>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="flex flex-col">
+          <span class="text-sm text-gray-500 mb-1">Doctor asignado</span>
+          <span class="font-medium">{{ item.assigned_doctor }}</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-sm text-gray-500 mb-1">Tipo</span>
+          @if (item.study_type === 'Laboratorio' ||
+          item.study_type?.toLowerCase() === 'laboratorio') {
+          <span
+            class="inline-block bg-green-100 text-green-800 p-1 rounded text-sm font-medium"
+          >
+            {{ item.study_type }}
+          </span>
+          } @else if (item.study_type === 'Gabinete' ||
+          item.study_type?.toLowerCase() === 'gabinete') {
+          <span
+            class="inline-block bg-blue-100 text-blue-800 p-1 rounded text-sm font-medium"
+          >
+            {{ item.study_type }}
+          </span>
+          } @else if (item.study_type) {
+          <span
+            class="inline-block bg-gray-100 text-gray-800 p-1 rounded text-sm font-medium"
+          >
+            {{ item.study_type }}
+          </span>
+          } @else {
+          <span
+            class="inline-block bg-gray-100 text-gray-800 p-1 rounded text-sm font-medium"
+          >
+            No especificado
+          </span>
+          }
+        </div>
+        <div class="flex flex-col">
+          <span class="text-sm text-gray-500 mb-1">Estado</span>
+          @if (item.status === 'pending') {
+          <span
+            class="inline-block bg-yellow-100 text-yellow-800 p-1 rounded text-sm font-medium"
+          >
+            {{ getStatusLabel(item.status) }}
+          </span>
+          } @else if (item.status === 'completed') {
+          <span
+            class="inline-block bg-green-100 text-green-800 p-1 rounded text-sm font-medium"
+          >
+            {{ getStatusLabel(item.status) }}
+          </span>
+          } @else if (item.status === 'approved') {
+          <span
+            class="inline-block bg-blue-100 text-blue-800 p-1 rounded text-sm font-medium"
+          >
+            {{ getStatusLabel(item.status) }}
+          </span>
+          } @else if (item.status) {
+          <span
+            class="inline-block bg-gray-100 text-gray-800 p-1 rounded text-sm font-medium"
+          >
+            {{ item.status }}
+          </span>
+          } @else {
+          <span
+            class="inline-block bg-gray-100 text-gray-800 p-1 rounded text-sm font-medium"
+          >
+            No especificado
+          </span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Motivo -->
+    @if (item.reason) {
+    <div class="mb-8">
+      <h2 class="text-lg font-semibold text-gray-900 mb-3">
+        Motivo del Estudio
+      </h2>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <p class="text-gray-700 leading-relaxed">{{ item.reason }}</p>
+      </div>
+    </div>
+    }
+
+    <!-- Archivos -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-gray-900">Archivos Adjuntos</h2>
+        @if (canUploadPdf(item)) {
+        <label
+          class="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium cursor-pointer"
+        >
+          <i class="fa-solid fa-plus"></i>
+          Agregar archivo
+          <input
+            type="file"
+            accept=".pdf,application/pdf"
+            (change)="onFileSelected($event)"
+            class="hidden"
+            [disabled]="uploading()"
+          />
+        </label>
+        }
+      </div>
+
+      <!-- Lista de archivos -->
+      <div class="space-y-4">
+        <!-- Archivo seleccionado para subir -->
+        @if (selectedFile) {
+        <div
+          class="flex items-center justify-between p-4 border border-blue-200 bg-blue-50 rounded-lg mb-4"
+        >
+          <div class="flex items-center gap-4 flex-1">
+            <div
+              class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center"
+            >
+              <i class="fa-solid fa-file-pdf text-red-600 text-xl"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-medium text-gray-900">{{ selectedFile.name }}</h3>
+              <p class="text-sm text-gray-500">
+                {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              (click)="clearFile()"
+              class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              [disabled]="uploading()"
+            >
+              <i class="fa-solid fa-times"></i>
+            </button>
+            <button
+              (click)="uploadSelectedFile()"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="uploading()"
+            >
+              @if (uploading()) {
+              <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+              Subiendo... } @else {
+              <i class="fa-solid fa-upload mr-2"></i>
+              Subir PDF }
+            </button>
+          </div>
+        </div>
+        }
+
+        <!-- Archivos existentes -->
+        @if (item.url) {
+        <div
+          class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          <div class="flex items-center gap-4 flex-1">
+            <div
+              class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center"
+            >
+              <i class="fa-solid fa-file-pdf text-red-600 text-xl"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-medium text-gray-900">
+                {{ item.url.split('/').pop() || 'Resultados_Estudio_Sangre.pdf'
+                }}
+              </h3>
+              @if (item.document_date) {
+              <p class="text-sm text-gray-500">
+                2.4 MB • Subido el {{ item.document_date | ItemDate :
+                'dd/MM/yyyy' }}
+              </p>
+              }
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              (click)="openPdfInNewWindow(item.url || '')"
+              class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            >
+              <i class="fa-solid fa-folder-open"></i>
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Preview del PDF -->
+    <div class="border-t pt-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Vista Previa</h2>
+      @if (selectedFileObjectUrl()) {
+      <div class="border border-gray-200 rounded-lg overflow-hidden">
+        <pdf-viewer
+          [src]="selectedFileObjectUrl()!"
+          [render-text]="true"
+          [original-size]="false"
+          [show-all]="true"
+          style="display: block; height: 400px"
+        ></pdf-viewer>
+      </div>
+      } @else if (item.url) { @let pdfUrl = getPdfUrl(item.url); @if (pdfUrl) {
+      <div class="border border-gray-200 rounded-lg overflow-hidden">
+        <pdf-viewer
+          [src]="pdfUrl"
+          [render-text]="true"
+          [original-size]="false"
+          [show-all]="true"
+          style="display: block; height: 400px"
+        ></pdf-viewer>
+      </div>
+      } @else {
+      <div
+        class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center"
+      >
+        <i class="fa-solid fa-file-pdf text-4xl text-gray-400 mb-3"></i>
+        <p class="text-gray-500 mb-4">No se puede cargar el PDF</p>
+      </div>
+      } } @else {
+      <div
+        class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center"
+      >
+        <i class="fa-solid fa-file-pdf text-4xl text-gray-400 mb-3"></i>
+        <p class="text-gray-500 mb-4">
+          Selecciona un archivo para ver la vista previa
+        </p>
+      </div>
+      }
+    </div>
+
+    <!-- Acciones -->
+    <div class="flex justify-end gap-3 mt-8 pt-6 border-t">
+      <button
+        (click)="clearFile()"
+        class="flex items-center gap-2 text-gray-600 hover:text-gray-800 px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors"
+      >
+        <i class="fa-solid fa-times"></i>
+        Cancelar
+      </button>
+      <button
+        (click)="uploadSelectedFile()"
+        class="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        <i class="fa-solid fa-floppy-disk"></i>
+        Guardar Cambios
+      </button>
+    </div>
+  </div>
+</div>
+}

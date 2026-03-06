@@ -1,0 +1,261 @@
+<main class="w-screen h-screen bg-gray-50">
+  <section class="h-full flex flex-col">
+    <!-- Header -->
+    <header
+      class="h-16 bg-white border-b border-gray-200 flex items-center px-4 lg:px-6 justify-between"
+    >
+      <div class="flex items-center gap-4">
+        <button
+          class="flex items-center justify-center p-2 rounded-lg w-9 h-9 hover:bg-gray-100 transition-colors lg:hidden"
+        >
+          <i class="fa-solid fa-bars text-gray-600"></i>
+        </button>
+        <h1 class="text-xl font-semibold text-gray-800">VitaCare</h1>
+      </div>
+
+      <div class="flex items-center gap-3 bg-gray-100 p-2 rounded-lg">
+        <button
+          class="bg-white py-0.5 px-2 rounded-lg text-sm font-medium text-gray-700"
+        >
+          Doctor
+        </button>
+        <button
+          class="bg-white py-0.5 px-2 rounded-lg text-sm font-medium text-gray-700"
+        >
+          Administrador
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenido Centrado -->
+    <div class="flex-1 flex items-center justify-center p-6">
+      <div class="w-full max-w-1/2 p-8">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">
+            Bienvenido a VitaCare!
+          </h2>
+          <span class="text-gray-600 text-lg">
+            Completa la información para registrarte
+          </span>
+        </div>
+
+        <!-- Mensajes -->
+        @if (error()) {
+        <div class="mb-4 text-sm text-red-600">{{ error() }}</div>
+        } @if (success()) {
+        <div class="mb-4 text-sm text-green-600">
+          Cuenta creada correctamente. Ahora puedes iniciar sesión.
+        </div>
+        }
+
+        <!-- Formulario -->
+        <form class="space-y-6" (submit)="onSubmit($event)">
+          <!-- Grid de información personal -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Nombre -->
+            <div class="space-y-2">
+              <label
+                for="first_name"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Nombre *
+              </label>
+              <input
+                type="text"
+                id="first_name"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                placeholder="Tu nombre"
+                required
+                [value]="firstName()"
+                (input)="onFirstNameInput($event)"
+              />
+            </div>
+
+            <!-- Apellido Paterno -->
+            <div class="space-y-2">
+              <label
+                for="last_name"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Apellido Paterno *
+              </label>
+              <input
+                type="text"
+                id="last_name"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                placeholder="Apellido paterno"
+                required
+                [value]="lastName()"
+                (input)="onLastNameInput($event)"
+              />
+            </div>
+
+            <!-- Apellido Materno -->
+            <div class="space-y-2">
+              <label
+                for="middle_name"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Apellido Materno
+              </label>
+              <input
+                type="text"
+                id="middle_name"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                placeholder="Apellido materno"
+                [value]="middleName()"
+                (input)="onMiddleNameInput($event)"
+              />
+            </div>
+
+            <!-- Cédula -->
+            <div class="space-y-2">
+              <label
+                for="license_number"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Cédula Profesional *
+              </label>
+              <input
+                type="text"
+                id="license_number"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                placeholder="Número de cédula"
+                required
+                [value]="licenseNumber()"
+                (input)="onLicenseNumberInput($event)"
+              />
+            </div>
+
+            <!-- Cédula Estatal -->
+            <div class="space-y-2">
+              <label
+                for="license_number_E"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Cédula Estatal *
+              </label>
+              <input
+                type="text"
+                id="license_number_E"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                placeholder="Número de cédula estatal"
+                required
+                [value]="licenseNumberE()"
+                (input)="onLicenseNumberEInput($event)"
+              />
+            </div>
+
+            <!-- Especialidad -->
+            <div class="space-y-2">
+              <label
+                for="specialty"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Especialidad *
+              </label>
+              <select
+                id="specialty"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+                required
+                [value]="specialty()"
+                (change)="onSpecialtyChange($event)"
+              >
+                <option value="">Selecciona una especialidad</option>
+                <option value="General">General</option>
+                <option value="Pediatría">Pediatría</option>
+                <option value="Ginecología">Ginecología</option>
+                <option value="Cardiología">Cardiología</option>
+                <option value="Dermatología">Dermatología</option>
+                <option value="Otra especialidad">Otra especialidad</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Correo -->
+          <div class="space-y-2">
+            <label for="email" class="block text-sm font-medium text-gray-700">
+              Correo Electrónico *
+            </label>
+            <input
+              type="email"
+              id="email"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+              placeholder="tu.correo@ejemplo.com"
+              required
+              [value]="email()"
+              (input)="onEmailInput($event)"
+            />
+          </div>
+
+          <!-- Contraseña -->
+          <div class="space-y-2">
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-700"
+            >
+              Contraseña *
+            </label>
+            <div class="relative">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                placeholder="Mínimo 8 caracteres"
+                required
+                [value]="password()"
+                (input)="onPasswordInput($event)"
+              />
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <i
+                  [class]="showPassword ? 'fa-solid fa-eye-slash text-lg' : 'fa-solid fa-eye text-lg'"
+                ></i>
+              </button>
+            </div>
+
+            <!-- Indicador de seguridad (opcional) -->
+            @if (password().length > 0) {
+            <div class="flex items-center gap-2 text-xs">
+              <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  class="h-full transition-all duration-300"
+                  [class]="getPasswordStrengthClass()"
+                  [style.width.%]="getPasswordStrength()"
+                ></div>
+              </div>
+              <span class="text-gray-500">{{ password().length }}/8</span>
+            </div>
+            }
+          </div>
+
+          <!-- Botón de envío -->
+          <button
+            type="submit"
+            class="w-full py-3 bg-black text-white font-medium rounded-lg hover:bg-blue-600 transition-colors shadow-sm disabled:opacity-60"
+            [disabled]="doctorSvc.loading()"
+          >
+            <i class="fa-solid fa-user-plus"></i>
+            Crear Cuenta
+          </button>
+
+          <!-- Enlace a login -->
+          <div class="text-center">
+            <p class="text-sm text-gray-600">
+              ¿Ya tienes una cuenta?
+              <a
+                routerLink="/auth/login"
+                class="text-blue-500 hover:text-blue-700 font-medium"
+              >
+                Inicia sesión aquí
+              </a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>

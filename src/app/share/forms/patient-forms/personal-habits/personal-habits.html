@@ -1,0 +1,207 @@
+<div class="max-w-4xl mx-auto p-6">
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <h3 class="text-2xl font-bold text-gray-800 mb-2">
+      Antecedentes No Patológicos
+    </h3>
+    <span class="text-gray-600">
+      Información sobre hábitos y estilo de vida del paciente
+    </span>
+  </div>
+
+  <!-- Formulario -->
+  <form class="space-y-8" [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Hábitos -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <h4
+        class="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2"
+      >
+        <i class="fa-solid fa-user-check text-blue-500"></i>
+        Hábitos y Estilo de Vida
+      </h4>
+
+      <div class="space-y-6">
+        <!-- Tabaco -->
+        <div class="border border-gray-200 rounded-lg p-6">
+          <label class="flex items-center mb-4 cursor-pointer">
+            <input
+              type="checkbox"
+              formControlName="tobacco"
+              class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <span class="ml-3 text-gray-700 font-medium text-lg">
+              Tabaco
+            </span>
+          </label>
+
+          @if (form.get('tobacco')?.value) {
+          <div class="ml-8 grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <!-- Edad de inicio al fumar -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Edad de inicio al fumar <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                formControlName="smoking_start_age"
+                min="1"
+                max="120"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                placeholder="Ej: 18"
+              />
+              @if (
+                form.get('smoking_start_age')?.invalid &&
+                form.get('smoking_start_age')?.touched
+              ) {
+              <p class="text-sm text-red-500">
+                La edad de inicio es requerida
+              </p>
+              }
+            </div>
+
+            <!-- Cigarros por día -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Cigarros por día <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                formControlName="cigarettes_per_day"
+                min="1"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                placeholder="Ej: 10"
+              />
+              @if (
+                form.get('cigarettes_per_day')?.invalid &&
+                form.get('cigarettes_per_day')?.touched
+              ) {
+              <p class="text-sm text-red-500">
+                La cantidad de cigarros es requerida
+              </p>
+              }
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Alcohol -->
+        <div class="border border-gray-200 rounded-lg p-6">
+          <label class="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              formControlName="alcohol"
+              class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <span class="ml-3 text-gray-700 font-medium text-lg">
+              Alcohol
+            </span>
+          </label>
+        </div>
+
+        <!-- Uso de drogas -->
+        <div class="border border-gray-200 rounded-lg p-6">
+          <label class="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              formControlName="drugs"
+              class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <span class="ml-3 text-gray-700 font-medium text-lg">
+              Uso de drogas
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Antecedentes personales patológicos -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <h4 class="text-lg font-semibold text-gray-800 mb-6">
+        Antecedentes Personales Patologicos
+      </h4>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700">Alergias</label>
+          <textarea
+            rows="2"
+            formControlName="allergies_text"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none placeholder-gray-400"
+            placeholder="Especifique alergias..."
+          ></textarea>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">
+            Hospitalizaciones previas
+          </label>
+          <input
+            type="text"
+            formControlName="previous_hospitalizations"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: 1"
+          />
+        </div>
+
+        <div class="space-y-2 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700">
+            Enfermedades crónicas
+          </label>
+          <textarea
+            rows="2"
+            formControlName="chronic_diseases"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none placeholder-gray-400"
+            placeholder="Especifique cuáles..."
+          ></textarea>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Cirugías</label>
+          <input
+            type="text"
+            formControlName="surgeries"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: 2"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Fracturas</label>
+          <input
+            type="text"
+            formControlName="fractures"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: 1"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Transfusiones</label>
+          <input
+            type="text"
+            formControlName="transfusions"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Especifique..."
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
+      <button
+        type="submit"
+        [disabled]="isLoading()"
+        class="px-8 py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <i class="fa-solid fa-save mr-2"></i>
+        @if (isLoading()) {
+        <span>Guardando...</span>
+        } @else {
+        <span>Guardar</span>
+        }
+      </button>
+    </div>
+  </form>
+</div>
+

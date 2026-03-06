@@ -1,0 +1,143 @@
+<section class="h-full w-full grid grid-cols-4 gap-0">
+  <!-- Sidebar (1/3) -->
+  <div class="col-span-1 p-2 border-r border-gray-300 overflow-hidden">
+    <form class="max-w-md mx-auto mb-4">
+      <label
+        for="search"
+        class="block mb-2 text-sm font-medium text-gray-500 sr-only"
+        >Search</label
+      >
+      <div class="relative">
+        <div
+          class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+        >
+          <i class="fa-solid fa-magnifying-glass w-4 h-4 text-gray-400"></i>
+        </div>
+        <input
+          type="search"
+          id="search"
+          class="block w-full pl-10 pr-2 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 shadow-sm"
+          placeholder="Search"
+          required
+        />
+      </div>
+    </form>
+    <article class="flex flex-col max-h-[900px] overflow-y-auto">
+      @if (loading()) {
+      <div class="flex items-center justify-center p-8">
+        <p class="text-sm text-gray-500">Cargando órdenes...</p>
+      </div>
+      } @else if (studyOrders().length === 0) {
+      <div class="flex items-center justify-center p-8">
+        <p class="text-sm text-gray-500">No hay órdenes de estudio</p>
+      </div>
+      } @else {
+      <ul class="divide-y divide-gray-200">
+        @for (order of studyOrders(); track order.id) {
+        <li
+          (click)="selectOrder(order.id)"
+          class="p-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center transition-colors"
+          [class.bg-blue-50]="selectedOrderId() === order.id"
+        >
+          <span class="text-sm text-gray-700">
+            {{ order.order_date | ItemDate }}
+          </span>
+          <span class="text-xs text-gray-400"> #{{ order.id }} </span>
+        </li>
+        }
+      </ul>
+      }
+    </article>
+  </div>
+
+  <!-- Contenido principal (2/3) -->
+  <div class="col-span-3 p-4 overflow-y-scroll">
+    <div class="grid grid-cols-2 gap-6 h-full">
+      <!-- Lista de estudios solicitados -->
+      <div class="flex flex-col">
+        <h3 class="mb-6 text-2xl font-bold text-gray-900">
+          Solicitudes de estudios
+        </h3>
+
+        <div class="flex-1 border border-gray-200 bg-white rounded-lg p-6">
+          <div class="h-full flex flex-col">
+            <!-- Header de la lista -->
+            <div class="flex justify-between items-center mb-4">
+              <h4 class="font-semibold text-gray-800">Estudios solicitados</h4>
+              @if (studyOrderFull()) {
+              <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded"
+                >{{ studyOrderFull()!.items.length }} estudios</span
+              >
+              }
+            </div>
+
+            <!-- Lista de estudios usando las cards -->
+            <div class="space-y-3 flex-1 overflow-y-auto">
+              @if (loadingOrder()) {
+              <div class="flex items-center justify-center p-8">
+                <p class="text-sm text-gray-500">Cargando estudios...</p>
+              </div>
+              } @else if (selectedOrderId() === null) {
+              <div class="text-center text-gray-400 py-8">
+                <svg
+                  class="w-12 h-12 mx-auto mb-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                  />
+                </svg>
+                <p class="text-sm font-medium">Seleccione una orden</p>
+                <p class="text-xs mt-1">
+                  Haga clic en una orden del lado izquierdo para ver los
+                  estudios
+                </p>
+              </div>
+              } @else if (studyOrderFull() && studyOrderFull()!.items.length ===
+              0) {
+              <div class="text-center text-gray-400 py-8">
+                <svg
+                  class="w-12 h-12 mx-auto mb-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                  />
+                </svg>
+                <p class="text-sm font-medium">No hay estudios solicitados</p>
+                <p class="text-xs mt-1">
+                  Esta orden no tiene estudios asociados
+                </p>
+              </div>
+              } @else if (studyOrderFull()) { @for (item of
+              studyOrderFull()!.items; track item.id) {
+              <!-- Usando el componente study-items-card -->
+              <study-items-card
+                [studyItem]="item"
+                [selected]="selectedStudyItem()?.id === item.id"
+                (selectItem)="selectStudyItem($event)"
+              />
+              } }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Viewer -->
+      <study-oreders-viewer
+        [orderId]="selectedOrderId()"
+        [selectedItemId]="selectedStudyItem()?.id ?? null"
+      />
+    </div>
+  </div>
+</section>

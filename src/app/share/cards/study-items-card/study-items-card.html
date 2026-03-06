@@ -1,0 +1,54 @@
+@if (studyItem) {
+<div
+  (click)="onClick()"
+  class="bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-300 cursor-pointer transition-colors"
+  [class.border-blue-300]="selected"
+  [class.bg-blue-50]="selected"
+>
+  <div class="flex justify-between items-start">
+    <div>
+      <h5 class="font-medium text-gray-900">{{ studyItem.name }}</h5>
+      <p class="text-sm text-gray-600">{{ studyItem.assigned_doctor }}</p>
+      <!-- Badge de tipo - Usando tu diseño de badges -->
+      @if (studyItem.study_type === 'Gabinete' || studyItem.study_type ===
+      'gabinete' || studyItem.study_type.toLowerCase().includes('gabinete')) {
+      <span
+        class="inline-block mt-1 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"
+      >
+        {{ studyItem.study_type }}
+      </span>
+      } @else if (studyItem.study_type === 'Laboratorio' || studyItem.study_type
+      === 'laboratorio' ||
+      studyItem.study_type.toLowerCase().includes('laboratorio')) {
+      <span
+        class="inline-block mt-1 text-xs bg-green-100 text-green-800 px-2 py-1 rounded"
+      >
+        {{ studyItem.study_type }}
+      </span>
+      } @else {
+      <span
+        class="inline-block mt-1 text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded"
+      >
+        {{ studyItem.study_type }}
+      </span>
+      }
+    </div>
+    @if (studyItem.document_date) {
+    <span class="text-xs text-gray-400"
+      >{{ studyItem.document_date | ItemDate : 'dd/MM/yyyy' }}</span
+    >
+    }
+  </div>
+</div>
+} @else {
+<div
+  class="bg-white border border-gray-200 rounded-lg p-4 opacity-50 cursor-not-allowed"
+>
+  <div class="flex justify-between items-start">
+    <div>
+      <h5 class="font-medium text-gray-400">Sin datos</h5>
+      <p class="text-sm text-gray-400">No hay información disponible</p>
+    </div>
+  </div>
+</div>
+}

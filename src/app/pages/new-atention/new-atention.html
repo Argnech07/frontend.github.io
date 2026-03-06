@@ -1,0 +1,520 @@
+<main class="w-screen h-screen flex flex-row p-2 bg-gray-50">
+  <section
+    class="w-full h-full border border-gray-200 rounded-2xl bg-white flex flex-col"
+  >
+    <!-- Header fijo -->
+    <header
+      class="rounded-t-2xl py-3 px-6 flex items-center justify-between shadow-sm bg-white border-b border-gray-100"
+    >
+      <!-- Información del doctor -->
+      <div class="shrink-0 w-64">
+        <p class="font-semibold text-gray-800">
+          Dr. {{ doctorSvc.doctor() | FullNamePipe }}
+        </p>
+        <p class="text-xs text-gray-500">
+          Cédula: {{ doctorSvc.licenseNumber() || '---' }}
+        </p>
+      </div>
+
+      <!-- Stepper centrado -->
+      <div class="flex-1 max-w-2xl mx-8">
+        <ol class="flex items-center w-full">
+          <!-- Paso 1: Consulta -->
+          <li class="flex w-full items-center">
+            <button
+              class="flex items-center"
+              (click)="selectStep('consultation')"
+            >
+              <span
+                class="flex items-center justify-center w-8 h-8 bg-blue-500 rounded-full shrink-0 text-white text-sm font-medium"
+              >
+                1
+              </span>
+              <span class="ml-2 text-sm font-medium text-gray-900"
+                >Consulta</span
+              >
+            </button>
+            <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+          </li>
+
+          <!-- Paso 2: Tratamiento -->
+          <li class="flex w-full items-center">
+            <button
+              class="flex items-center"
+              [class.opacity-50]="!attentionId()"
+              [class.cursor-not-allowed]="!attentionId()"
+              (click)="attentionId() && selectStep('treatment')"
+            >
+              <span
+                class="flex items-center justify-center w-8 h-8 rounded-full shrink-0 text-sm font-medium border-2"
+                [class]="attentionId() ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-100 text-gray-400 border-gray-300'"
+              >
+                2
+              </span>
+              <span
+                class="ml-2 text-sm font-medium"
+                [class]="attentionId() ? 'text-gray-900' : 'text-gray-400'"
+              >
+                Tratamiento
+              </span>
+            </button>
+            <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+          </li>
+
+          <!-- Paso 3: Solicitudes -->
+          <li class="flex items-center">
+            <button
+              class="flex items-center"
+              [class.opacity-50]="!attentionId()"
+              [class.cursor-not-allowed]="!attentionId()"
+              (click)="attentionId() && selectStep('requests')"
+            >
+              <span
+                class="flex items-center justify-center w-8 h-8 rounded-full shrink-0 text-sm font-medium border-2"
+                [class]="attentionId() ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-100 text-gray-400 border-gray-300'"
+              >
+                3
+              </span>
+              <span
+                class="ml-2 text-sm font-medium"
+                [class]="attentionId() ? 'text-gray-900' : 'text-gray-400'"
+              >
+                Solicitudes
+              </span>
+            </button>
+          </li>
+        </ol>
+      </div>
+
+      <div class="flex items-center space-x-3 shrink-0">
+        <button
+          (click)="cancelAttention()"
+          class="flex items-center gap-2 text-gray-600 hover:text-red-600 group px-4 py-2 rounded-lg transition-all duration-200 hover:bg-red-50 border border-gray-300 hover:border-red-200"
+        >
+          <i class="fa-solid fa-ban text-sm"></i>
+          <span class="font-medium text-sm">Cancelar</span>
+        </button>
+
+        <button
+          class="bg-gray-800 py-2 px-6 rounded-lg text-white hover:bg-gray-900 transition-colors font-medium shadow-sm"
+          type="button"
+          (click)="finishAttention()"
+          [disabled]="!visitId()"
+        >
+          Terminar y salir
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <div class="flex-1 overflow-auto">
+      <!-- Paso 1: Consulta -->
+      @if (currentStep() === 'consultation') {
+      <section class="flex flex-col h-full w-full px-8 py-6">
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-200 mb-6">
+          <button
+            class="px-6 py-3 border-b-2 font-medium text-sm transition-colors"
+            [class]="consultationTab() === 'reason' 
+                ? 'border-blue-500 text-blue-600' 
+                : 'border-transparent text-gray-500 hover:text-gray-700'"
+            (click)="setConsultationTab('reason')"
+          >
+            Motivo de Consulta
+          </button>
+          <button
+            class="px-6 py-3 border-b-2 font-medium text-sm transition-colors"
+            [class]="consultationTab() === 'physicalExam' 
+                ? 'border-blue-500 text-blue-600' 
+                : 'border-transparent text-gray-500 hover:text-gray-700'"
+            (click)="setConsultationTab('physicalExam')"
+          >
+            Exploración Física
+          </button>
+          <button
+            class="px-6 py-3 border-b-2 font-medium text-sm transition-colors"
+            [class]="consultationTab() === 'plan' 
+                ? 'border-blue-500 text-blue-600' 
+                : 'border-transparent text-gray-500 hover:text-gray-700'"
+            (click)="setConsultationTab('plan')"
+          >
+            Plan Terapéutico
+          </button>
+        </div>
+
+        <!-- Área de contenido -->
+        <div class="flex space-x-6 flex-1">
+          <!-- Editor principal -->
+          <section class="flex-1 flex flex-col">
+            <div class="flex-1 flex flex-col">
+              <div class="flex-1 p-6">
+                <textarea
+                  class="w-full h-full border border-gray-300 rounded-lg p-4 text-gray-700 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-none placeholder-gray-400 text-base leading-relaxed bg-gray-50"
+                  [placeholder]="getPlaceholder()"
+                  [value]="getCurrentValue()"
+                  (input)="onTextareaInput($any($event.target).value)"
+                  rows="12"
+                ></textarea>
+              </div>
+
+              <div
+                class="border-t border-gray-200 px-6 py-4 bg-gray-50 rounded-b-lg"
+              >
+                <div class="flex justify-between items-center">
+                  <p class="text-sm text-gray-500">Mínimo 10 caracteres</p>
+                  <p
+                    class="text-sm font-medium"
+                    [class]="getCharacterCount() < 10 ? 'text-red-500' : 'text-green-500'"
+                  >
+                    {{ getCharacterCount() }} caracteres
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Panel lateral -->
+
+          <diagnostic
+            [visitId]="visitId() ?? 0"
+            (diagnosisChange)="onDiagnosisChange($event)"
+          />
+        </div>
+        <div class="mt-6 flex justify-end">
+          <button
+            class="inline-flex items-center justify-center px-6 py-2.5 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-sm"
+            type="button"
+            (click)="onSaveVisit()"
+            [disabled]="loading() || visitForm.invalid || !diagnosisPrimary()"
+          >
+            {{ loading() ? 'Guardando...' : (visitId() ? 'Actualizar consulta' :
+            'Guardar consulta') }}
+          </button>
+        </div>
+      </section>
+      }
+
+      <!-- Paso 2: Tratamiento -->
+      @if (currentStep() === 'treatment' && attentionId()) {
+      <div
+        class="w-full h-full flex flex-col bg-white rounded-lg border border-gray-200 overflow-hidden"
+      >
+        <!-- Layout de dos columnas que ocupa toda la altura -->
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 min-h-0">
+          <!-- Columna izquierda: Formulario con scroll -->
+          <div class="flex flex-col min-h-0">
+            <div class="flex-1 overflow-y-auto space-y-6 pr-2">
+              <!-- Lista de Medicamentos -->
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-lg font-semibold text-gray-800">
+                    Medicamentos
+                  </h3>
+                  <button
+                    type="button"
+                    class="px-3 py-1.5 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors flex items-center gap-1"
+                    (click)="addMedication()"
+                  >
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    Agregar
+                  </button>
+                </div>
+
+                @for (medication of medications.controls; track $index) {
+                @let medIndex = $index;
+                <div
+                  class="border border-gray-200 rounded-lg p-3 mb-3 bg-white shadow-sm"
+                >
+                  <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div>
+                      <label
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                        >Medicamento</label
+                      >
+                      <div class="text-[10px] text-gray-400 mb-1">
+                        {{ medicationsCatalog().length }} en catálogo
+                      </div>
+                      <div class="relative">
+                        <input
+                          type="text"
+                          class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                          placeholder="Nombre"
+                          [formControl]="getMedicationControl($index, 'medication_name')"
+                          (focus)="onMedicationNameFocus($index, $event)"
+                          (input)="onMedicationNameInput($index, $event)"
+                          (blur)="closeMedicationAutocompleteSoon()"
+                        />
+
+                        @if (medicationSuggestions(medIndex).length > 0) {
+                        <div
+                          class="mt-1 max-h-56 overflow-auto border border-gray-200 bg-white rounded shadow"
+                        >
+                          @for (m of medicationSuggestions(medIndex); track m.id) {
+                          <button
+                            type="button"
+                            class="w-full text-left px-2 py-1 text-sm hover:bg-gray-100"
+                            (mousedown)="selectMedicationSuggestion(medIndex, m)"
+                          >
+                            {{ medicationOptionLabel(m) }}
+                          </button>
+                          }
+                        </div>
+                        }
+                      </div>
+                      @if (medicationsCatalog().length === 0) {
+                      <div class="text-[11px] text-red-600 mt-1">
+                        No se cargó el catálogo de medicamentos en el frontend.
+                      </div>
+                      }
+                    </div>
+                    <div>
+                      <label
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                        >Presentación</label
+                      >
+                      <input
+                        type="text"
+                        class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        placeholder="Forma"
+                        [formControl]="getMedicationControl($index, 'presentation')"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div>
+                      <label
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                        >Dosis</label
+                      >
+                      <input
+                        type="text"
+                        class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        placeholder="Por toma"
+                        [formControl]="getMedicationControl($index, 'dosage')"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                        >Cada</label
+                      >
+                      <div class="flex gap-1">
+                        <input
+                          type="number"
+                          class="w-12 px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                          min="1"
+                          max="24"
+                          [formControl]="getMedicationControl($index, 'frequency_hours')"
+                        />
+                        <span class="flex items-center text-gray-600 text-xs"
+                          >hrs</span
+                        >
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                        >Durante</label
+                      >
+                      <div class="flex gap-1">
+                        <input
+                          type="number"
+                          class="w-12 px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                          min="1"
+                          [formControl]="getMedicationControl($index, 'duration_days')"
+                        />
+                        <span class="flex items-center text-gray-600 text-xs"
+                          >días</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                        >Vía</label
+                      >
+                      <select
+                        class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        [formControl]="getMedicationControl($index, 'route')"
+                      >
+                        <option value="">Seleccionar</option>
+                        <option value="Oral">Oral</option>
+                        <option value="Inhalatoria">Inhalatoria</option>
+                        <option value="Subcutánea">Subcutánea</option>
+                        <option value="Intramuscular">Intramuscular</option>
+                        <option value="Intravenosa">Intravenosa</option>
+                        <option value="Tópica">Tópica</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                        >Indicaciones</label
+                      >
+                      <input
+                        type="text"
+                        class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        placeholder="Adicionales"
+                        [formControl]="getMedicationControl($index, 'notes')"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="flex justify-end mt-2">
+                    <button
+                      type="button"
+                      class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors flex items-center gap-1"
+                      (click)="removeMedication($index)"
+                    >
+                      <i class="fa-solid fa-trash text-xs"></i>
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+                }
+
+                <!-- Botón agregar más -->
+                <button
+                  type="button"
+                  class="px-3 py-2 border-2 border-dashed border-gray-300 text-gray-500 rounded hover:border-blue-400 hover:text-blue-500 transition-colors w-full text-sm"
+                  (click)="addMedication()"
+                >
+                  <i class="fa-solid fa-plus mr-1"></i>
+                  Agregar otro medicamento
+                </button>
+              </div>
+
+              <!-- Instrucciones generales -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Instrucciones Generales
+                </label>
+                <textarea
+                  rows="4"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none text-sm"
+                  placeholder="Reposo, dieta, cuidados..."
+                  [formControl]="generalInstructions"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna derecha: Preview fijo -->
+          <div
+            class="lg:border-l lg:border-gray-200 lg:pl-6 flex flex-col min-h-0"
+          >
+            <div class="flex-1 flex flex-col min-h-0">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-lg font-semibold text-gray-800">
+                  Vista Previa
+                </h3>
+                <span class="text-xs text-gray-500"
+                  >Actualización en tiempo real</span
+                >
+              </div>
+
+              <!-- Preview de la receta con scroll interno -->
+              <div class="flex-1 overflow-y-auto pr-2">
+                <div id="print-prescription">
+                  <presccription-impress
+                    [medications]="medications.value"
+                    [generalInstructions]="(generalInstructions.value ?? '')"
+                    [prescriptionId]="prescriptionId()"
+                    [prescriptionDate]="prescriptionDate()"
+                    [attentionId]="attentionId()"
+                    [visitId]="visitId()"
+                    [visitTs]="visitTs()"
+                    [diagnosisPrimary]="diagnosisPrimary()"
+                    [diagnosisSecondary]="diagnosisSecondary()"
+                  />
+                </div>
+              </div>
+
+              <!-- Botones de acción fijos en la parte inferior -->
+              <div class="flex gap-2 mt-4 pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                  (click)="updatePreview()"
+                >
+                  <i class="fa-solid fa-rotate mr-1"></i>
+                  Actualizar
+                </button>
+                <button
+                  type="button"
+                  class="flex-1 px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors text-sm print:hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                  (click)="downloadPrescriptionPdf()"
+                  [disabled]="generatingPrescriptionPdf()"
+                >
+                  <i class="fa-solid fa-file-pdf mr-1"></i>
+                  {{ generatingPrescriptionPdf() ? 'Generando PDF...' : 'Descargar PDF' }}
+                </button>
+                <button
+                  type="button"
+                  class="flex-1 px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  (click)="savePrescription($event)"
+                  [disabled]="loading() || savingPrescription() || medications.controls.length === 0"
+                >
+                  <i class="fa-solid fa-save mr-1"></i>
+                  {{ loading() ? 'Guardando...' : 'Guardar Prescripción' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- Paso 3: Solicitudes -->
+      @if (currentStep() === 'requests' && attentionId()) {
+      <study-orders-form [attentionId]="attentionId()!"></study-orders-form>
+      }
+    </div>
+
+    <!-- Modal del Visor de PDF -->
+    @if (pdfViewerVisible()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4">
+      <div class="w-full max-w-5xl h-[90vh] bg-white rounded-lg shadow-2xl flex flex-col overflow-hidden">
+        <!-- Header del modal -->
+        <div class="flex items-center justify-between px-4 py-3 bg-gray-800 text-white rounded-t-lg">
+          <h3 class="text-lg font-semibold">
+            <i class="fa-solid fa-file-pdf mr-2 text-red-400"></i>
+            Receta Médica - Vista Previa
+          </h3>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+              (click)="downloadViewerPdf()"
+            >
+              <i class="fa-solid fa-download mr-1"></i>
+              Descargar
+            </button>
+            <button
+              type="button"
+              class="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded transition-colors"
+              (click)="closePdfViewer()"
+            >
+              <i class="fa-solid fa-xmark mr-1"></i>
+              Cerrar
+            </button>
+          </div>
+        </div>
+        <!-- Contenido del PDF -->
+        <div class="flex-1 bg-gray-100">
+          <iframe
+            [src]="pdfViewerUrl()"
+            class="w-full h-full border-0"
+            type="application/pdf"
+            title="Vista previa de la receta"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+    }
+  </section>
+</main>

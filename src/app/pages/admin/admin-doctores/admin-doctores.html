@@ -1,0 +1,133 @@
+<section class="p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-xl font-semibold text-gray-800">Doctores</h1>
+    <button
+      type="button"
+      class="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      (click)="refresh()"
+      [disabled]="loading()"
+    >
+      @if (loading()) { <i class="fa-solid fa-spinner fa-spin mr-2"></i> }
+      Actualizar
+    </button>
+  </div>
+
+  @if (apiOffline()) {
+    <div
+      class="mb-4 p-4 border border-yellow-200 bg-yellow-50 text-yellow-800 rounded"
+    >
+      No se pudo conectar con el servidor. Verifica que el backend esté encendido.
+    </div>
+  }
+
+  @if (error()) {
+    <div class="mb-4 p-4 border border-red-200 bg-red-50 text-red-700 rounded">
+      {{ error() }}
+    </div>
+  }
+
+  <div class="flex items-center gap-3 w-full mb-4">
+    <div class="relative flex-1">
+      <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+        <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+      </div>
+      <input
+        type="text"
+        placeholder="Buscar doctores..."
+        class="w-full h-12 pl-10 pr-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+    </div>
+
+    <div class="relative">
+      <select
+        (change)="onStatusFilterChange($any($event.target).value)"
+        [value]="statusFilter()"
+        class="h-12 pl-4 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm appearance-none cursor-pointer"
+      >
+        <option value="all">Todos</option>
+        <option value="active">Activos</option>
+        <option value="inactive">Inactivos</option>
+      </select>
+      <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+        <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto border border-gray-200 rounded-lg bg-white">
+    <table class="w-full text-sm text-left text-gray-600">
+      <thead class="text-sm text-gray-700 bg-gray-100 border-b border-gray-200">
+        <tr>
+          <th scope="col" class="px-6 py-3 font-semibold">Doctor</th>
+          <th scope="col" class="px-6 py-3 font-semibold">Email</th>
+          <th scope="col" class="px-6 py-3 font-semibold">Especialidad</th>
+          <th scope="col" class="px-6 py-3 font-semibold">Estado</th>
+          <th scope="col" class="px-6 py-3 font-semibold">Acceso</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (filteredDoctors().length === 0) {
+          <tr>
+            <td class="px-6 py-6 text-gray-500" colspan="5">
+              No hay doctores para mostrar.
+            </td>
+          </tr>
+        } @else {
+          @for (d of filteredDoctors(); track d.id) {
+            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">
+                {{ d | FullNamePipe }}
+              </td>
+              <td class="px-6 py-4">{{ d.email }}</td>
+              <td class="px-6 py-4">{{ d.specialty }}</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <span
+                    class="w-3 h-3 rounded-full mr-2"
+                    [class.bg-green-500]="d.is_active"
+                    [class.bg-red-500]="!d.is_active"
+                  ></span>
+                  <span
+                    class="font-medium"
+                    [class.text-green-700]="d.is_active"
+                    [class.text-red-700]="!d.is_active"
+                  >
+                    {{ d.is_active ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    class="px-3 py-2 rounded-lg border border-green-200 text-green-700 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    (click)="toggleAccess(d, true)"
+                    [disabled]="isToggling(d.id) || d.is_active"
+                  >
+                    @if (isToggling(d.id)) {
+                      <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                    }
+                    Permitir acceso
+                  </button>
+
+                  <button
+                    type="button"
+                    class="px-3 py-2 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    (click)="toggleAccess(d, false)"
+                    [disabled]="isToggling(d.id) || !d.is_active"
+                  >
+                    @if (isToggling(d.id)) {
+                      <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                    }
+                    Denegar acceso
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,18 @@
+# Frontend Angular - VitaCare
+# Configuración para Render.com
+
+services:
+  # Servicio Web Estático para Angular
+  - type: web
+    name: vitacare-frontend
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist/vita-care
+    # SPA routing - redirigir todas las rutas a index.html
+    routes:
+      - type: rewrite
+        source: /.*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: 20

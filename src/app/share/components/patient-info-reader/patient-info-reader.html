@@ -1,0 +1,387 @@
+<!-- Contenido principal -->
+<section class="flex flex-col lg:flex-row p-1 sm:p-2">
+  <!-- Panel izquierdo - Historia médica -->
+  <div class="w-full lg:w-3/4 lg:pr-2">
+    <!-- Heredofamiliares -->
+    <div class="p-1 sm:p-2 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-3 sm:mb-4 p-2">
+        <h4 class="text-base sm:text-lg font-semibold">Heredofamiliares</h4>
+      </div>
+
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 p-3 sm:p-4 md:p-6"
+      >
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con diabetes
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.diabetes ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con cáncer de mama
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.breast_cancer ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares otro Tipo de Cancer
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.other_cancers ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con hipertensión
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.hypertension ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con tuberculosis
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.tuberculosis ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con cardiopatías
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.cardiopathies ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con problemas renales
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.renal_disease ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con alergias
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.allergies ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con osteoporosis
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.osteoporosis ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">Otros antecedentes</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.other || 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con trastornos hemorrágicos
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.bleeding_disorders ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con tabaquismo
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.smoking ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Familiares con otras adicciones
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.family_history?.addictions ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- No heredofamiliares -->
+    <div class="p-1 sm:p-2 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-3 sm:mb-4 p-2">
+        <h4 class="text-base sm:text-lg font-semibold">Antecedentes Personales Patologicos</h4>
+      </div>
+
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 p-3 sm:p-4 md:p-6"
+      >
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">Tabaco</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.tobacco ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">
+            Edad de inicio al fumar
+          </p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.smoking_start_age ?? 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">Cigarros por día</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.cigarettes_per_day ?? 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">Alcohol</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.alcohol ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">Uso de drogas</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.drugs ? 'Sí' : 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded lg:col-span-3">
+          <p class="text-xs sm:text-sm text-gray-500">Alergias</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.allergies_text || 'N/A' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Antecedentes personales patológicos -->
+    <div class="p-1 sm:p-2 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-3 sm:mb-4 p-2">
+        <h4 class="text-base sm:text-lg font-semibold">
+          Antecedentes personales patológicos
+        </h4>
+      </div>
+
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 p-3 sm:p-4 md:p-6"
+      >
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">Hospitalizaciones previas</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.previous_hospitalizations ?? 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">Cirugías</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.surgeries ?? 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">Fracturas</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.fractures ?? 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded">
+          <p class="text-xs sm:text-sm text-gray-500">Transfusiones</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.transfusions ?? 'N/A' }}
+          </p>
+        </div>
+
+        <div class="space-y-1 p-2 bg-gray-50 rounded lg:col-span-3">
+          <p class="text-xs sm:text-sm text-gray-500">Enfermedades crónicas</p>
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ history()?.personal_habits?.chronic_diseases || 'N/A' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel derecho - Signos Vitales -->
+  <aside class="w-full lg:w-1/4 p-1 sm:p-2">
+    <div class="sticky top-4 bg-white p-3 sm:p-4">
+      <div class="flex items-center justify-between mb-3 sm:mb-4">
+        <h3
+          class="font-semibold text-gray-900 flex items-center text-base sm:text-lg gap-2"
+        >
+          <i class="fa-solid fa-heart-pulse text-blue-600"></i>
+          Signos Vitales
+        </h3>
+      </div>
+
+      <div class="space-y-3">
+        <dl class="space-y-1 text-sm border-b border-gray-200 pb-3">
+          <div
+            class="flex justify-between items-center py-1.5 border-b border-gray-100"
+          >
+            <dt class="font-medium text-gray-700 text-xs sm:text-sm">Peso</dt>
+            <dd class="text-gray-900 text-xs sm:text-sm">
+              {{ vitals()?.weight ?? 'N/A' }} kg
+            </dd>
+          </div>
+
+          <div
+            class="flex justify-between items-center py-1.5 border-b border-gray-100"
+          >
+            <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+              Estatura
+            </dt>
+            <dd class="text-gray-900 text-xs sm:text-sm">
+              {{ vitals()?.height ?? 'N/A' }} cm
+            </dd>
+          </div>
+
+          <div
+            class="flex justify-between items-center py-1.5 border-b border-gray-100"
+          >
+            <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+              Tensión arterial
+            </dt>
+            <dd class="text-gray-900 text-xs sm:text-sm">
+              {{ vitals()?.systolic && vitals()?.diastolic ?vitals()?.systolic +
+              '/' + vitals()?.diastolic : 'N/A' }}
+            </dd>
+          </div>
+
+          <div
+            class="flex justify-between items-center py-1.5 border-b border-gray-100"
+          >
+            <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+              Temperatura
+            </dt>
+            <dd class="text-gray-900 text-xs sm:text-sm">
+              {{ vitals()?.temperature ?? 'N/A' }} °C
+            </dd>
+          </div>
+
+          <div
+            class="flex justify-between items-center py-1.5 border-b border-gray-100"
+          >
+            <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+              Frecuencia cardíaca
+            </dt>
+            <dd class="text-gray-900 text-xs sm:text-sm">
+              {{ vitals()?.heart_rate ?? 'N/A' }} bpm
+            </dd>
+          </div>
+
+          <div
+            class="flex justify-between items-center py-1.5 border-b border-gray-100"
+          >
+            <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+              Frecuencia respiratoria
+            </dt>
+            <dd class="text-gray-900 text-xs sm:text-sm">
+              {{ vitals()?.respiratory_rate ?? 'N/A' }} rpm
+            </dd>
+          </div>
+
+          <div class="flex justify-between items-center py-1.5">
+            <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+              Glucosa
+            </dt>
+            <dd class="text-gray-900 text-xs sm:text-sm">
+              {{ vitals()?.glucose ?? 'N/A' }} mg/dl
+            </dd>
+          </div>
+        </dl>
+
+        <!-- Antropometría -->
+        <div>
+          <h4 class="font-medium text-gray-900 text-xs sm:text-sm mb-2">
+            Antropometría
+          </h4>
+
+          <dl class="space-y-1 text-sm">
+            <div
+              class="flex justify-between items-center py-1.5 border-b border-gray-100"
+            >
+              <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+                Cintura
+              </dt>
+              <dd class="text-gray-900 text-xs sm:text-sm">
+                {{ vitals()?.waist_cm ?? 'N/A' }} cm
+              </dd>
+            </div>
+
+            <div
+              class="flex justify-between items-center py-1.5 border-b border-gray-100"
+            >
+              <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+                Abdomen
+              </dt>
+              <dd class="text-gray-900 text-xs sm:text-sm">
+                {{ vitals()?.abdomen_cm ?? 'N/A' }} cm
+              </dd>
+            </div>
+
+            <div
+              class="flex justify-between items-center py-1.5 border-b border-gray-100"
+            >
+              <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+                Cadera
+              </dt>
+              <dd class="text-gray-900 text-xs sm:text-sm">
+                {{ vitals()?.hip_cm ?? 'N/A' }} cm
+              </dd>
+            </div>
+
+            <div class="flex justify-between items-center py-1.5">
+              <dt class="font-medium text-gray-700 text-xs sm:text-sm">
+                Circunferencia craneal
+              </dt>
+              <dd class="text-gray-900 text-xs sm:text-sm">
+                {{ vitals()?.head_circumference_cm ?? 'N/A' }} cm
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- IMC -->
+        <div
+          class="flex justify-between items-center pt-2 border-t border-gray-200"
+        >
+          <dt class="font-semibold text-gray-900 text-xs sm:text-sm">IMC</dt>
+          <dd class="font-bold text-blue-600 text-xs sm:text-sm">
+            {{ vitals()?.bmi ?? 'N/A' }}
+          </dd>
+        </div>
+      </div>
+    </div>
+  </aside>
+</section>

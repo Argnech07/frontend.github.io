@@ -1,0 +1,694 @@
+<!-- Contenido principal - MODO EDICIÓN -->
+<section class="flex flex-col lg:flex-row p-1 sm:p-2">
+  <!-- Panel izquierdo - Historia médica -->
+  <div class="w-full lg:w-3/4 lg:pr-2">
+    <!-- Botones de acción -->
+    <div class="mb-4 flex gap-2 justify-end p-2 bg-white rounded">
+      <button
+        (click)="cancelChanges()"
+        type="button"
+        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+      >
+        <i class="fa-solid fa-xmark mr-2"></i>
+        Cancelar
+      </button>
+      <button
+        (click)="saveChanges()"
+        type="button"
+        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+      >
+        <i class="fa-solid fa-floppy-disk mr-2"></i>
+        Guardar cambios
+      </button>
+    </div>
+
+    <!-- Datos del paciente - FORMULARIO -->
+    <div class="p-1 sm:p-2 mb-4 bg-white rounded">
+      <div class="flex items-center justify-between mb-3 sm:mb-4 p-2">
+        <h4 class="text-base sm:text-lg font-semibold">Datos del paciente</h4>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 p-3 sm:p-4 md:p-6">
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Fecha de nacimiento
+          </label>
+          <input
+            type="date"
+            [(ngModel)]="editedProfile.birth_date"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Sexo
+          </label>
+          <select
+            [(ngModel)]="editedProfile.gender"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="null">N/A</option>
+            <option [ngValue]="'Masculino'">Masculino</option>
+            <option [ngValue]="'Femenino'">Femenino</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">CURP</label>
+          <input
+            type="text"
+            [(ngModel)]="editedProfile.curp"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="CURP"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">Teléfono</label>
+          <input
+            type="text"
+            [(ngModel)]="editedProfile.phone"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Teléfono"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">Calle</label>
+          <input
+            type="text"
+            [(ngModel)]="editedProfile.street"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Calle"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">Ciudad</label>
+          <input
+            type="text"
+            [(ngModel)]="editedProfile.city"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Ciudad"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">Código postal</label>
+          <input
+            type="text"
+            [(ngModel)]="editedProfile.postal_code"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Código postal"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">Estado civil</label>
+          <select
+            [(ngModel)]="editedProfile.marital_status"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="null">N/A</option>
+            <option [ngValue]="'Soltero'">Soltero</option>
+            <option [ngValue]="'Casado'">Casado</option>
+            <option [ngValue]="'Unión libre'">Unión libre</option>
+            <option [ngValue]="'Divorciado'">Divorciado</option>
+            <option [ngValue]="'Viudo'">Viudo</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">Ocupación</label>
+          <input
+            type="text"
+            [(ngModel)]="editedProfile.occupation"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Ocupación"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">Escolaridad</label>
+          <select
+            [(ngModel)]="editedProfile.education"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="null">N/A</option>
+            <option [ngValue]="'Primaria'">Primaria</option>
+            <option [ngValue]="'Secundaria'">Secundaria</option>
+            <option [ngValue]="'Preparatoria'">Preparatoria</option>
+            <option [ngValue]="'Técnico'">Técnico</option>
+            <option [ngValue]="'Licenciatura'">Licenciatura</option>
+            <option [ngValue]="'Maestría'">Maestría</option>
+            <option [ngValue]="'Doctorado'">Doctorado</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">Procedencia</label>
+          <input
+            type="text"
+            [(ngModel)]="editedProfile.origin"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Procedencia"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">Tipo de sangre</label>
+          <select
+            [(ngModel)]="editedProfile.blood_type"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="null">N/A</option>
+            <option [ngValue]="'A+'">A+</option>
+            <option [ngValue]="'A-'">A-</option>
+            <option [ngValue]="'B+'">B+</option>
+            <option [ngValue]="'B-'">B-</option>
+            <option [ngValue]="'AB+'">AB+</option>
+            <option [ngValue]="'AB-'">AB-</option>
+            <option [ngValue]="'O+'">O+</option>
+            <option [ngValue]="'O-'">O-</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heredofamiliares - FORMULARIO -->
+    <div class="p-1 sm:p-2 mb-4 bg-white rounded">
+      <div class="flex items-center justify-between mb-3 sm:mb-4 p-2">
+        <h4 class="text-base sm:text-lg font-semibold">Heredofamiliares</h4>
+      </div>
+
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 p-3 sm:p-4 md:p-6"
+      >
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con diabetes
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.diabetes"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con cáncer de mama
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.breast_cancer"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares otro Tipo de Cancer
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.other_cancers"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con hipertensión
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.hypertension"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con tuberculosis
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.tuberculosis"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con cardiopatías
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.cardiopathies"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con problemas renales
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.renal_disease"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con alergias
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.allergies"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con osteoporosis
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.osteoporosis"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con trastornos hemorrágicos
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.bleeding_disorders"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con tabaquismo
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.smoking"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Familiares con otras adicciones
+          </label>
+          <select
+            [(ngModel)]="editedHistory.family_history.addictions"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2 col-span-full">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Otros antecedentes
+          </label>
+          <textarea
+            [(ngModel)]="editedHistory.family_history.other"
+            rows="2"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Especifique otros antecedentes familiares..."
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- No heredofamiliares - FORMULARIO -->
+    <div class="p-1 sm:p-2 mb-4 bg-white rounded">
+      <div class="flex items-center justify-between mb-3 sm:mb-4 p-2">
+        <h4 class="text-base sm:text-lg font-semibold">Antecedentes Personales Patologicos</h4>
+      </div>
+
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 p-3 sm:p-4 md:p-6"
+      >
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Tabaco
+          </label>
+          <select
+            [(ngModel)]="editedHistory.personal_habits.tobacco"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Edad de inicio al fumar
+          </label>
+          <input
+            type="number"
+            [(ngModel)]="editedHistory.personal_habits.smoking_start_age"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Edad"
+            min="0"
+            max="100"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Cigarros por día
+          </label>
+          <input
+            type="number"
+            [(ngModel)]="editedHistory.personal_habits.cigarettes_per_day"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Cantidad"
+            min="0"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Alcohol
+          </label>
+          <select
+            [(ngModel)]="editedHistory.personal_habits.alcohol"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Uso de drogas
+          </label>
+          <select
+            [(ngModel)]="editedHistory.personal_habits.drugs"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Antecedentes personales patológicos - FORMULARIO -->
+    <div class="p-1 sm:p-2 mb-4 bg-white rounded">
+      <div class="flex items-center justify-between mb-3 sm:mb-4 p-2">
+        <h4 class="text-base sm:text-lg font-semibold">
+          Antecedentes personales patológicos
+        </h4>
+      </div>
+
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 p-3 sm:p-4 md:p-6"
+      >
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Hospitalizaciones previas
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="editedHistory.personal_habits.previous_hospitalizations"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="0"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Cirugías
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="editedHistory.personal_habits.surgeries"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="0"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Fracturas
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="editedHistory.personal_habits.fractures"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="0"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Transfusiones
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="editedHistory.personal_habits.transfusions"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Especifique..."
+          />
+        </div>
+
+        <div class="space-y-2 lg:col-span-3">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Alergias
+          </label>
+          <textarea
+            [(ngModel)]="editedHistory.personal_habits.allergies_text"
+            rows="2"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Especifique alergias..."
+          ></textarea>
+        </div>
+
+        <div class="space-y-2 lg:col-span-3">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium">
+            Enfermedades crónicas
+          </label>
+          <textarea
+            [(ngModel)]="editedHistory.personal_habits.chronic_diseases"
+            rows="2"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Especifique cuáles..."
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel derecho - Signos Vitales - FORMULARIO -->
+  <aside class="w-full lg:w-1/4 p-1 sm:p-2">
+    <div class="sticky top-4 bg-white p-3 sm:p-4 rounded">
+      <div class="flex items-center justify-between mb-3 sm:mb-4">
+        <h3
+          class="font-semibold text-gray-900 flex items-center text-base sm:text-lg gap-2"
+        >
+          <i class="fa-solid fa-heart-pulse text-blue-600"></i>
+          Signos Vitales
+        </h3>
+      </div>
+
+      <div class="space-y-3">
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium"
+            >Peso (kg)</label
+          >
+          <input
+            type="number"
+            step="0.1"
+            [(ngModel)]="editedVitals.weight"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Peso"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium"
+            >Estatura (cm)</label
+          >
+          <input
+            type="number"
+            step="0.1"
+            [(ngModel)]="editedVitals.height"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Estatura"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium"
+            >Presión sistólica</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="editedVitals.systolic"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="120"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium"
+            >Presión diastólica</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="editedVitals.diastolic"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="80"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium"
+            >Temperatura (°C)</label
+          >
+          <input
+            type="number"
+            step="0.1"
+            [(ngModel)]="editedVitals.temperature"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="36.5"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium"
+            >Frecuencia cardíaca (bpm)</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="editedVitals.heart_rate"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="72"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium"
+            >Frecuencia respiratoria (rpm)</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="editedVitals.respiratory_rate"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="16"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs sm:text-sm text-gray-700 font-medium"
+            >Glucosa (mg/dl)</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="editedVitals.glucose"
+            class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="90"
+          />
+        </div>
+
+        <!-- Antropometría -->
+        <div class="pt-3 border-t border-gray-200">
+          <h4 class="font-medium text-gray-900 text-xs sm:text-sm mb-3">
+            Antropometría
+          </h4>
+
+          <div class="space-y-2">
+            <label class="text-xs sm:text-sm text-gray-700 font-medium"
+              >Cintura (cm)</label
+            >
+            <input
+              type="number"
+              step="0.1"
+              [(ngModel)]="editedVitals.waist_cm"
+              class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Cintura"
+            />
+          </div>
+
+          <div class="space-y-2 mt-2">
+            <label class="text-xs sm:text-sm text-gray-700 font-medium"
+              >Abdomen (cm)</label
+            >
+            <input
+              type="number"
+              step="0.1"
+              [(ngModel)]="editedVitals.abdomen_cm"
+              class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Abdomen"
+            />
+          </div>
+
+          <div class="space-y-2 mt-2">
+            <label class="text-xs sm:text-sm text-gray-700 font-medium"
+              >Cadera (cm)</label
+            >
+            <input
+              type="number"
+              step="0.1"
+              [(ngModel)]="editedVitals.hip_cm"
+              class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Cadera"
+            />
+          </div>
+
+          <div class="space-y-2 mt-2">
+            <label class="text-xs sm:text-sm text-gray-700 font-medium"
+              >Circunferencia craneal (cm)</label
+            >
+            <input
+              type="number"
+              step="0.1"
+              [(ngModel)]="editedVitals.head_circumference_cm"
+              class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Circunferencia"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</section>

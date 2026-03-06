@@ -1,0 +1,180 @@
+<div class="max-w-4xl mx-auto p-6">
+  <div class="text-center mb-8">
+    <h3 class="text-2xl font-bold text-gray-800 mb-2">Somatometría</h3>
+    <span class="text-gray-600">Peso, talla, IMC y circunferencias</span>
+  </div>
+
+  <form class="space-y-8" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <h4 class="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <i class="fa-solid fa-weight-scale text-blue-500"></i>
+        Medidas antropométricas
+      </h4>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700">
+            Fecha y hora de la toma <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="datetime-local"
+            formControlName="taken_at"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+          />
+        </div>
+
+        <div class="space-y-2 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700">Tensión arterial (mmHg)</label>
+          <div class="grid grid-cols-2 gap-4">
+            <input
+              type="number"
+              formControlName="systolic"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+              placeholder="N/A"
+            />
+            <input
+              type="number"
+              formControlName="diastolic"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+              placeholder="N/A"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Temperatura (°C)</label>
+          <input
+            type="number"
+            step="0.1"
+            formControlName="temperature"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="N/A"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Frecuencia cardíaca (bpm)</label>
+          <input
+            type="number"
+            formControlName="heart_rate"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="N/A"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Frecuencia respiratoria (rpm)</label>
+          <input
+            type="number"
+            formControlName="respiratory_rate"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="N/A"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Glucosa (mg/dl)</label>
+          <input
+            type="number"
+            step="0.1"
+            formControlName="glucose"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="N/A"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Peso (kg)</label>
+          <input
+            type="number"
+            step="0.1"
+            formControlName="weight"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: 70.5"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Talla (cm)</label>
+          <input
+            type="number"
+            step="0.1"
+            formControlName="height"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: 170"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">IMC</label>
+          <input
+            type="number"
+            step="0.1"
+            formControlName="bmi"
+            class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700 outline-none"
+            readonly
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Cintura (cm)</label>
+          <input
+            type="number"
+            step="0.1"
+            formControlName="waist_cm"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: 90"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Abdomen (cm)</label>
+          <input
+            type="number"
+            step="0.1"
+            formControlName="abdomen_cm"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: 95"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Cadera (cm)</label>
+          <input
+            type="number"
+            step="0.1"
+            formControlName="hip_cm"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: 100"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Circunferencia cefálica (cm)</label>
+          <input
+            type="number"
+            step="0.1"
+            formControlName="head_circumference_cm"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: 56"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
+      <button
+        type="submit"
+        [disabled]="isLoading()"
+        class="px-8 py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <i class="fa-solid fa-save mr-2"></i>
+        @if (isLoading()) {
+        <span>Guardando...</span>
+        } @else {
+        <span>Guardar</span>
+        }
+      </button>
+    </div>
+  </form>
+</div>

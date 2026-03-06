@@ -1,0 +1,69 @@
+<section class="p-6">
+  <h1 class="text-xl font-semibold text-gray-800 mb-4">Configuración</h1>
+
+  @if (apiOffline()) {
+    <div class="mb-4 p-4 border border-yellow-200 bg-yellow-50 text-yellow-800 rounded">
+      No se pudo conectar con el servidor ({{ apiUrl() }}). Verifica que el backend esté encendido.
+    </div>
+  }
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="border border-gray-200 rounded-lg p-4 bg-white">
+      <h2 class="font-semibold text-gray-800 mb-2">Sistema</h2>
+      <div class="text-sm text-gray-600 space-y-1">
+        <div><span class="font-medium">API:</span> {{ apiUrl() }}</div>
+        <div>
+          <span class="font-medium">Estado:</span>
+          <span
+            class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs"
+            [class.bg-green-100]="!apiOffline()"
+            [class.text-green-800]="!apiOffline()"
+            [class.bg-yellow-100]="apiOffline()"
+            [class.text-yellow-800]="apiOffline()"
+          >
+            {{ apiOffline() ? 'Sin conexión' : 'Conectado' }}
+          </span>
+        </div>
+        <div><span class="font-medium">Pacientes registrados:</span> {{ patientsCount() }}</div>
+        <div class="text-xs text-gray-500">Última actualización: {{ lastUpdated() }}</div>
+      </div>
+
+      <div class="mt-4 flex items-center gap-2">
+        <button
+          type="button"
+          class="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="refresh()"
+          [disabled]="loading()"
+        >
+          @if (loading()) { <i class="fa-solid fa-spinner fa-spin mr-2"></i> }
+          Actualizar
+        </button>
+      </div>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 bg-white">
+      <h2 class="font-semibold text-gray-800 mb-2">Administración</h2>
+      <p class="text-sm text-gray-600 mb-4">
+        Accesos rápidos a módulos administrativos.
+      </p>
+
+      <div class="grid grid-cols-1 gap-2">
+        <a
+          routerLink="/admin/usuarios"
+          class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded hover:bg-gray-50 transition-colors"
+        >
+          <span class="text-sm font-medium text-gray-700">Usuarios / Pacientes</span>
+          <i class="fa-solid fa-chevron-right text-gray-400 text-xs"></i>
+        </a>
+
+        <a
+          routerLink="/admin/reportes"
+          class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded hover:bg-gray-50 transition-colors"
+        >
+          <span class="text-sm font-medium text-gray-700">Reportes</span>
+          <i class="fa-solid fa-chevron-right text-gray-400 text-xs"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

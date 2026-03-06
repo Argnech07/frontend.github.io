@@ -1,0 +1,322 @@
+<section class="w-full h-full flex flex-col">
+  <header class="px-6 py-4">
+    <h1 class="text-xl font-bold text-gray-800">Solicitudes de Estudios</h1>
+    <p class="text-sm text-gray-500 mt-1">
+      Complete los datos para solicitar estudios médicos
+    </p>
+  </header>
+
+  <div class="flex-1 flex flex-col lg:grid lg:grid-cols-12 gap-6 p-6 overflow-hidden">
+    <!-- Form (más compacto) -->
+    <div class="lg:col-span-4 flex flex-col min-h-0">
+      <form class="flex-1 bg-white p-6 space-y-6" [formGroup]="form" novalidate>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">
+              Tipo de Estudio *
+            </label>
+            <select
+              class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+              formControlName="study_type"
+            >
+              <option value="">Seleccionar tipo...</option>
+              <option value="laboratorio">Laboratorio</option>
+              <option value="gabinete">Gabinete</option>
+              <option value="imagenología">Imagenología</option>
+              <option value="especializado">Especializado</option>
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">
+              Médico que Realiza *
+            </label>
+            <input
+              type="text"
+              class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+              placeholder="Nombre del especialista"
+              formControlName="assigned_doctor"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">
+            Nombre del Estudio *
+          </label>
+          <input
+            type="text"
+            class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+            placeholder="Ej: Rayos X de tórax, Biometría hemática..."
+            formControlName="name"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">
+            Motivo del Estudio *
+          </label>
+          <textarea
+            class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none placeholder-gray-400"
+            rows="4"
+            placeholder="Motivo..."
+            formControlName="reason"
+          ></textarea>
+        </div>
+
+        <button
+          type="button"
+          class="w-full py-3 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition-colors shadow-sm flex items-center justify-center gap-2"
+          (click)="addToCart()"
+        >
+          Añadir Estudio
+        </button>
+      </form>
+    </div>
+
+    <!-- Estudios solicitados (más pequeño) -->
+    <div class="lg:col-span-3 flex flex-col min-h-0">
+      <div class="p-6 flex-1 flex flex-col min-h-0">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">
+            Estudios Solicitados
+          </h3>
+          <span
+            class="bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full"
+          >
+            {{ totalCount }} estudios
+          </span>
+        </div>
+
+        <div class="flex-1 overflow-y-auto min-h-0">
+          @if (loadingExisting()) {
+          <div
+            class="h-full flex flex-col items-center justify-center text-gray-400 py-8 border-2 border-dashed border-gray-300 rounded-lg"
+          >
+            <p class="text-sm font-medium text-gray-500">Cargando estudios...</p>
+          </div>
+          } @else if (existingItems().length === 0 && cart().length === 0) {
+          <div
+            class="h-full flex flex-col items-center justify-center text-gray-400 py-8 border-2 border-dashed border-gray-300 rounded-lg"
+          >
+            <p class="text-sm font-medium text-gray-500">
+              No hay estudios en la solicitud
+            </p>
+          </div>
+          } @else {
+          <div class="space-y-3">
+            @if (existingItems().length > 0) {
+            @for (s of existingItems(); track s.id; let i = $index) {
+            <div
+              class="p-4 bg-white rounded-lg border border-gray-200"
+            >
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span
+                      class="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full"
+                    >
+                      {{ s.study_type }}
+                    </span>
+                    <p class="font-medium text-gray-900">{{ s.name }}</p>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-1">
+                    {{ s.assigned_doctor }}
+                  </p>
+                  <p class="text-xs text-gray-500">{{ s.reason }}</p>
+                </div>
+                <div class="flex items-center gap-2 ml-3 shrink-0">
+                  @if (s.url) {
+                  <button
+                    type="button"
+                    class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    (click)="openPdfInNewWindow(s.url)"
+                  >
+                    <i class="fa-solid fa-file-pdf"></i>
+                  </button>
+                  }
+                  <span class="text-xs text-gray-400">Guardado</span>
+                </div>
+              </div>
+            </div>
+            }
+            }
+
+            @for (s of cart(); track s; let i = $index) {
+            <div
+              class="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+            >
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span
+                      class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
+                    >
+                      {{ s.study_type }}
+                    </span>
+                    <p class="font-medium text-gray-900">{{ s.name }}</p>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-1">
+                    {{ s.assigned_doctor }}
+                  </p>
+                  <p class="text-xs text-gray-500">{{ s.reason }}</p>
+                </div>
+                <button
+                  type="button"
+                  class="text-gray-400 hover:text-red-500 transition-colors ml-3 shrink-0"
+                  (click)="removeFromCart(i)"
+                >
+                  X
+                </button>
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Vista previa (tipo hoja) -->
+    <div class="lg:col-span-5 flex flex-col min-h-0">
+      <div class="p-6 flex-1 overflow-y-auto bg-white rounded-lg border border-gray-200">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-lg font-semibold text-gray-800">Vista Previa</h3>
+          <div class="flex items-center gap-3">
+            <div class="text-xs text-gray-400">Actualización en tiempo real</div>
+            <button
+              type="button"
+              class="px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+              (click)="printPreview()"
+            >
+              Imprimir
+            </button>
+          </div>
+        </div>
+
+        <div id="study-order-preview" class="max-w-2xl mx-auto font-sans text-sm bg-white print:max-w-none">
+          <header class="text-center mb-2 relative">
+            <img
+              [src]="logoUrl()"
+              alt="Logo"
+              class="absolute left-0 top-0 w-24 h-24 object-contain"
+            />
+            <div class="text-base font-bold">Dr. {{ doctorFullName() }}</div>
+            <div class="text-xs font-semibold uppercase">
+              {{ doctorSpecialtyLabel() }}
+            </div>
+            <div class="text-xs">
+              Ced. Prof. {{ doctorLicenseLabel() }}
+            </div>
+            <div class="text-xs">
+              Ced. Est. {{ doctorLicenseELabel() }}
+            </div>
+            <div class="text-[10px] leading-tight mt-1">
+              <div class="font-semibold">Reg. Estatal. 24 132 459 SIII</div>
+              <div class="font-bold">SERVICIOS MEDICOS J.M.A.S.S</div>
+              <div class="font-semibold">AV.20 DE NOVIEMBRE NUM 2 COL. CENTRO TEL 5221521</div>
+            </div>
+            <div class="border-b border-black mt-2"></div>
+          </header>
+
+          <div class="grid grid-cols-12 gap-2">
+            <!-- Cuadro lateral vitals -->
+            <div class="col-span-4 border border-gray-400">
+              <div class="grid grid-cols-1 text-xs">
+                <div class="p-2 border-b border-gray-300">
+                  <strong>Edad:</strong> {{ patientAgeLabel() }}
+                </div>
+                <div class="p-2 border-b border-gray-300">
+                  <strong>Peso:</strong> {{ weightLabel() }}
+                </div>
+                <div class="p-2 border-b border-gray-300">
+                  <strong>Talla:</strong> {{ heightLabel() }}
+                </div>
+                <div class="p-2 border-b border-gray-300">
+                  <strong>IMC:</strong> {{ bmiLabel() }}
+                </div>
+                <div class="p-2 border-b border-gray-300">
+                  <strong>FC:</strong> {{ heartRateLabel() }}
+                </div>
+                <div class="p-2 border-b border-gray-300">
+                  <strong>FR:</strong> {{ respiratoryRateLabel() }}
+                </div>
+                <div class="p-2 border-b border-gray-300">
+                  <strong>TA:</strong> {{ bloodPressureLabel() }}
+                </div>
+                <div class="p-2 border-b border-gray-300">
+                  <strong>Temp C:</strong> {{ temperatureLabel() }}
+                </div>
+                <div class="p-2">
+                  <strong>Alergias:</strong> {{ allergiesLabel() }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="col-span-8">
+              <div class="text-xs mb-2">
+                <strong>PACIENTE:</strong> {{ patientFullName() }}
+                <span class="ml-4"><strong>EMPLEADO:</strong> {{ employeeLabel() }}</span>
+                <span class="ml-4"><strong>FECHA:</strong> {{ todayLabel() }}</span>
+              </div>
+              <div class="text-xs mb-3">
+                <strong>F. NACIMIENTO:</strong> {{ patientBirthDateLabel() }}
+              </div>
+
+              <div class="text-sm font-semibold mb-2">
+                {{ previewStudyTypeLabel() }}:
+              </div>
+              <ul class="list-disc list-inside text-sm space-y-1">
+                @if (typedStudyNameLabel()) {
+                <li class="text-gray-500 italic">
+                  {{ typedStudyNameLabel() }}
+                </li>
+                }
+                @for (s of existingItems(); track s.id) {
+                <li>
+                  {{ s.name }}
+                </li>
+                }
+                @for (s of cart(); track s; let i = $index) {
+                <li>
+                  {{ s.name }}
+                </li>
+                }
+                @if (
+                  existingItems().length === 0 &&
+                  cart().length === 0 &&
+                  !typedStudyNameLabel()
+                ) {
+                <li class="text-gray-400">Sin estudios</li>
+                }
+              </ul>
+
+              <div class="mt-10">
+                <div class="text-sm">Firma:</div>
+                <div class="border-b border-black w-56 mt-6"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-white border-t border-gray-200 px-6 py-4">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="text-sm text-gray-600">
+        <p>Revise que toda la información sea correcta antes de guardar</p>
+      </div>
+      <button
+        class="px-8 py-2.5 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors shadow-sm flex items-center justify-center gap-2 min-w-40"
+        type="button"
+        (click)="saveAll()"
+        [disabled]="loading() || (cart().length === 0 && form.invalid)"
+      >
+        <i class="fa-solid fa-floppy-disk"></i>
+        {{ loading() ? 'Guardando...' : 'Guardar Solicitudes' }}
+      </button>
+    </div>
+  </footer>
+</section>

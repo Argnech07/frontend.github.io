@@ -1,0 +1,169 @@
+<section class="min-h-screen bg-gray-50">
+  @if (loading()) {
+  <div class="w-full flex justify-center items-center py-8">
+    <span class="text-gray-500 text-sm">
+      Cargando información del paciente...
+    </span>
+  </div>
+  } @else if (error()) {
+  <div class="w-full flex justify-center items-center py-8">
+    <span class="text-red-500 text-sm">{{ error() }}</span>
+  </div>
+  } @else {
+
+  <!-- Header del perfil -->
+  <header class="w-full p-3 sm:p-4 bg-gray-50">
+    <div
+      class="flex flex-col lg:flex-row lg:items-center lg:space-x-6 space-y-4 lg:space-y-0"
+    >
+      <!-- Información principal del paciente -->
+      <div class="flex items-start space-x-3 sm:space-x-4 flex-1 min-w-0">
+        <img
+          src="favicon.ico"
+          alt="foto de perfil"
+          class="w-16 h-16 sm:w-20 sm:h-20 rounded object-cover shrink-0"
+        />
+
+        <div class="flex flex-col space-y-1 flex-1 min-w-0">
+          <h2 class="text-lg sm:text-xl font-bold truncate">
+            {{ profile() | FullNamePipe }}
+          </h2>
+
+          <div
+            class="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-700"
+          >
+            <span class="flex items-center space-x-1 px-2 py-1">
+              <i class="fa-solid fa-cake-candles text-blue-600 text-xs"></i>
+              <span class="whitespace-nowrap">
+                {{ profile()?.birth_date && calculateAge(profile()?.birth_date
+                ?? null) !== null ? calculateAge(profile()?.birth_date ?? null)
+                + ' años' : 'N/A' }}
+              </span>
+            </span>
+
+            <span class="flex items-center space-x-1 px-2 py-1">
+              <i class="fa-solid fa-venus text-pink-600 text-xs"></i>
+              <span class="whitespace-nowrap">
+                {{ profile()?.gender || 'N/A' }}
+              </span>
+            </span>
+
+            <span
+              class="flex items-center space-x-1 px-2 py-1 truncate max-w-[180px] sm:max-w-none"
+            >
+              <i class="fa-solid fa-id-card text-gray-600 text-xs shrink-0"></i>
+              <span class="truncate">{{ profile()?.curp || 'N/A' }}</span>
+            </span>
+
+            <span class="flex items-center space-x-1 px-2 py-1">
+              <i class="fa-solid fa-droplet text-red-600 text-xs"></i>
+              <span class="whitespace-nowrap">
+                {{ profile()?.blood_type || 'N/A' }}
+              </span>
+            </span>
+          </div>
+
+          <span
+            class="text-xs sm:text-sm text-gray-700 flex items-start sm:items-center space-x-1 mt-2 min-w-0"
+          >
+            <i class="fa-solid fa-map-pin mt-0.5 shrink-0"></i>
+            <span class="truncate">{{ formatAddress(profile()) }}</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Datos personales -->
+      <div
+        class="flex flex-row bg-white rounded-lg shadow divide-x divide-gray-200 lg:flex lg:flex-row gap-2 sm:gap-0"
+      >
+        <div class="p-2 sm:p-4 flex flex-col min-w-[120px]">
+          <span class="text-gray-400 text-xs">Estado civil</span>
+          <span class="font-semibold text-sm sm:text-base truncate">
+            {{ getValue(profile()?.marital_status) }}
+          </span>
+        </div>
+
+        <div class="p-2 sm:p-4 flex flex-col min-w-[120px]">
+          <span class="text-gray-400 text-xs">Ocupación</span>
+          <span class="font-semibold text-sm sm:text-base truncate">
+            {{ getValue(profile()?.occupation) }}
+          </span>
+        </div>
+
+        <div class="p-2 sm:p-4 flex flex-col min-w-[120px]">
+          <span class="text-gray-400 text-xs">Escolaridad</span>
+          <span class="font-semibold text-sm sm:text-base truncate">
+            {{ getValue(profile()?.education) }}
+          </span>
+        </div>
+
+        <div class="p-2 sm:p-4 flex flex-col min-w-[120px]">
+          <span class="text-gray-400 text-xs">Procedencia</span>
+          <span class="font-semibold text-sm sm:text-base truncate">
+            {{ getValue(profile()?.origin) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Información de contacto -->
+      <div
+        class="flex flex-row bg-white rounded-lg shadow divide-x divide-gray-200 lg:flex lg:flex-row gap-2 sm:gap-0"
+      >
+        <div class="p-2 sm:p-4 flex flex-col min-w-[180px]">
+          <span class="text-gray-400 text-xs">Teléfono</span>
+          <span class="font-semibold text-sm sm:text-base truncate">
+            {{ getValue(profile()?.phone) }}
+          </span>
+        </div>
+      </div>
+
+      <div class="mt-4 flex items-center gap-2">
+        <button
+          (click)="modifyModeOn()"
+          class="fixed flex items-center justify-center bottom-6 right-6 w-12 h-12 rounded-lg border-blue-400 border-2 shadow-lg hover:shadow-xl hover:bg-blue-500 bg-white z-50 group transition-all duration-200"
+        >
+          <i
+            class="fa-solid text-xl transition-all"
+            [class.fa-pen]="!editmode()"
+            [class.fa-xmark]="editmode()"
+            [class.text-blue-500]="!editmode()"
+            [class.group-hover:text-white]="true"
+          ></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Componentes de lectura o modificación -->
+  @switch (editmode()) { @case (true) {
+  <!-- Pasando datos al componente de modificación -->
+  <patient-modify
+    [profile]="profile()"
+    [history]="history()"
+    [vitals]="vitals()"
+    (onSave)="handleSave($event)"
+    (onCancel)="handleCancel()"
+  />
+  } @default {
+  <!-- Pasando datos al componente de lectura -->
+  <patient-reader
+    [profile]="profile()"
+    [history]="history()"
+    [vitals]="vitals()"
+  />
+  } } }
+
+  <!-- Botón flotante para editar -->
+  <button
+    (click)="modifyModeOn()"
+    class="fixed flex items-center justify-center bottom-6 right-6 w-12 h-12 rounded-lg border-blue-400 border-2 shadow-lg hover:shadow-xl hover:bg-blue-500 bg-white z-50 group transition-all duration-200"
+  >
+    <i
+      class="fa-solid text-xl transition-all"
+      [class.fa-pen]="!editmode()"
+      [class.fa-xmark]="editmode()"
+      [class.text-blue-500]="!editmode()"
+      [class.group-hover:text-white]="true"
+    ></i>
+  </button>
+</section>

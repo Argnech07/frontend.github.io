@@ -1,0 +1,61 @@
+<section class="h-full w-full grid grid-cols-4 gap-0 relative">
+  <div class="col-span-1 p-2 border-r border-gray-300 overflow-hidden">
+    <form class="max-w-md mx-auto mb-4">
+      <label
+        for="search"
+        class="block mb-2 text-sm font-medium text-gray-500 sr-only"
+        >Search</label
+      >
+      <div class="relative">
+        <div
+          class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+        >
+          <i class="fa-solid fa-magnifying-glass w-4 h-4 text-gray-400"></i>
+        </div>
+        <input
+          type="search"
+          id="search"
+          class="block w-full pl-10 pr-2 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Buscar por fecha"
+          [value]="searchTerm()"
+          (input)="onSearchChange($event)"
+        />
+      </div>
+    </form>
+
+    <article class="flex flex-col flex-1 overflow-y-auto">
+      @if (loading()) {
+      <div class="flex justify-center items-center py-8">
+        <div class="text-gray-500 text-sm">Cargando visitas...</div>
+      </div>
+      } @else if (error()) {
+      <div class="flex justify-center items-center py-8">
+        <div class="text-red-500 text-sm">{{ error() }}</div>
+      </div>
+      } @else if (filteredVisits().length === 0) {
+      <div class="flex justify-center items-center py-8">
+        <div class="text-gray-500 text-sm">Sin visitas registradas</div>
+      </div>
+      } @else {
+      <ul class="divide-y divide-gray-200">
+        @for (v of filteredVisits(); track v.id) {
+        <li
+          class="p-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center transition-colors"
+          (click)="selectVisit(v)"
+          [class.bg-blue-50]="selectedVisitId() === v.id"
+        >
+          <span class="text-sm text-gray-700">
+            {{ v.visit_ts | ItemDate }}
+          </span>
+          <span class="text-xs text-gray-400"> #{{ v.id }} </span>
+        </li>
+        }
+      </ul>
+      }
+    </article>
+  </div>
+
+  <div class="col-span-3 p-2 overflow-y-scroll">
+    <consult-viewer [visitId]="selectedVisitId() || null" />
+  </div>
+</section>

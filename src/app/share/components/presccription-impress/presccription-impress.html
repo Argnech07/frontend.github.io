@@ -1,0 +1,154 @@
+<style>
+  #prescription-container,
+  #prescription-container * {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+</style>
+
+<div
+  id="prescription-container"
+  style="display: flex; flex-direction: column; gap: 12px; padding: 24px; max-width: 672px; margin: 0 auto; font-family: system-ui, -apple-system, sans-serif; font-size: 14px; background: white;"
+>
+  <!-- Encabezado -->
+  <header style="text-align: center; margin-bottom: 8px;">
+    <h1 style="font-size: 20px; font-weight: bold; color: #111827; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase;">
+      Receta Médica
+    </h1>
+    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #374151; margin-top: 8px;">
+      <p>Folio: {{ folio() }}</p>
+      <p>Fecha: {{ formattedDate() }}</p>
+      <p>Atención: {{ attentionCode() }}</p>
+    </div>
+  </header>
+
+  <!-- Diagnósticos -->
+  <div style="margin-bottom: 8px;">
+    <p style="font-size: 14px; color: #1f2937; line-height: 1.5;">
+      <span style="font-weight: 600; color: #111827;">Diagnósticos:</span> {{ diagnosisText() || '---' }}
+    </p>
+  </div>
+
+  <!-- Tratamiento -->
+  @if (medications().length > 0) {
+  <div style="margin-bottom: 16px;">
+    <h2 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">
+      Tratamiento
+    </h2>
+
+    @for (medication of medications(); track $index) {
+    <div style="margin-bottom: 12px;">
+      <p style="font-weight: 600; color: #111827; font-size: 14px; margin-bottom: 4px;">
+        {{ $index + 1 }}. @if (medication.medication_name) { {{ medication.medication_name }} } @if (medication.presentation) { - {{ medication.presentation }} }
+      </p>
+      @if (medication.dosage || medication.frequency_hours || medication.duration_days) {
+      <p style="color: #374151; font-size: 12px; line-height: 1.5;">
+        @if (medication.dosage) { <span style="font-weight: 500;">Dosis:</span> {{ medication.dosage }} } @if
+        (medication.frequency_hours) { cada {{ medication.frequency_hours }} horas } @if
+        (medication.duration_days) { por {{ medication.duration_days }} días } @if (medication.route) {
+        <span style="font-weight: 500;">• Vía {{ medication.route.toUpperCase() }}</span> }
+      </p>
+      } @if (medication.notes) {
+      <p style="font-size: 12px; color: #4b5563; font-style: italic; margin-top: 4px;">{{ medication.notes }}</p>
+      }
+    </div>
+    }
+  </div>
+  }
+
+  <!-- Datos del Paciente -->
+  <div style="margin-bottom: 16px;">
+    <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">
+      Datos del Paciente
+    </h3>
+    <p style="font-weight: 600; color: #111827; font-size: 16px; margin-bottom: 8px;">
+      {{ patientSvc.currentPatient() | FullNamePipe }}
+    </p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; font-size: 12px; color: #374151;">
+      <p>Sexo: {{ patientGenderLabel() }}</p>
+      <p>Edad: {{ patientAgeLabel() }}</p>
+      <p>F. Nacimiento: {{ patientBirthDateLabel() }}</p>
+      <p>Teléfono: {{ phoneLabel() }}</p>
+    </div>
+  </div>
+
+  <!-- Información adicional -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <p style="font-size: 12px; color: #374151;">No. Aplicación: {{ appNumberLabel() }}</p>
+      <p style="font-size: 12px; color: #374151;">Expediente: {{ expedienteLabel() }}</p>
+      <p style="font-size: 12px; color: #374151;">Procedencia: {{ procedenciaLabel() }}</p>
+      <p style="font-size: 12px; color: #374151;">Alergias: {{ allergiesLabel() }}</p>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: flex-start;">
+      <div style="text-align: center;">
+        <div style="font-size: 10px; color: #4b5563; margin-bottom: 4px;">CÓDIGO QR</div>
+        @if (qrUrl()) {
+        <qrcode
+          [qrdata]="qrUrl()"
+          [width]="112"
+          [errorCorrectionLevel]="'M'"
+          [colorDark]="'#000000'"
+          [colorLight]="'#ffffff'"
+          style="display: block;"
+        ></qrcode>
+        } @else {
+        <div style="width: 112px; height: 112px; background: #f3f4f6; display: flex; align-items: center; justify-content: center;">
+          <span style="font-size: 8px; font-family: monospace; color: #6b7280;">{{ folio() }}</span>
+        </div>
+        }
+        <div style="font-size: 8px; color: #4b5563; font-family: monospace; margin-top: 4px;">{{ folio() }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instrucciones adicionales -->
+  @if (formattedInstructions().length > 0) {
+  <div style="margin-bottom: 16px;">
+    <h3 style="font-weight: 600; color: #111827; margin-bottom: 4px; font-size: 14px;">Instrucciones Adicionales</h3>
+    <ul style="list-style-type: disc; list-style-position: inside; font-size: 12px; color: #374151; margin: 0; padding-left: 0;">
+      @for (instruction of formattedInstructions(); track $index) {
+      <li>{{ instruction }}</li>
+      }
+    </ul>
+  </div>
+  }
+
+  <!-- Datos del Médico -->
+  <div style="margin-bottom: 16px;">
+    <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">
+      Médico Tratante
+    </h3>
+    <p style="font-weight: 600; color: #111827; font-size: 14px;">
+      Dr. {{ doctorSvc.doctor() | FullNamePipe }}
+    </p>
+    <div style="font-size: 12px; color: #374151; display: flex; flex-direction: column; gap: 2px;">
+      <p>Especialidad: {{ doctorSvc.specialty() || '---' }}</p>
+      <p>Céd. Profesional: {{ doctorSvc.licenseNumber() || '---' }}</p>
+      <p>Céd. Estatal: {{ doctorSvc.licenseNumberE() || '---' }}</p>
+    </div>
+  </div>
+
+  <!-- Firma -->
+  <div style="margin-bottom: 16px; position: relative; min-height: 100px;">
+    <div style="position: absolute; left: 0; bottom: 32px;">
+      <p style="font-size: 12px; color: #4b5563; margin-bottom: 24px;">Firma del Médico</p>
+      <div style="width: 192px; height: 1px; background: #9ca3af;"></div>
+      <p style="font-size: 12px; text-align: center; margin-top: 4px; color: #374151;">
+        Dr. {{ doctorSvc.doctor() | FullNamePipe }}
+      </p>
+    </div>
+    <img
+      [src]="logoUrl()"
+      alt="Logo"
+      style="position: absolute; right: 0; bottom: 0; width: 96px; height: 96px; object-fit: contain;"
+    />
+  </div>
+
+  <!-- Footer -->
+  <footer style="font-size: 10px; text-align: center; color: #4b5563; padding-top: 12px;">
+    <p style="margin-bottom: 4px;">Fecha y hora de Impresión: {{ printDateTimeLabel() }} hrs</p>
+    <p style="font-weight: 600; color: #1f2937;">Expira a los tres días hábiles de la fecha de expedición</p>
+  </footer>
+</div>

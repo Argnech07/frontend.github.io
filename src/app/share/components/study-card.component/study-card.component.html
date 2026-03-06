@@ -1,0 +1,23 @@
+<div
+  class="bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-300 cursor-pointer transition-colors"
+>
+  <div class="flex justify-between items-start">
+    <div>
+      <h5 class="font-medium text-gray-900">{{ name }}</h5>
+      <p class="text-sm text-gray-600">{{ assigned_doctor }}</p>
+      <span
+        class="inline-block mt-1 text-xs px-2 py-1 rounded
+              {{
+          studyType === 'gabinete'
+            ? ' bg-blue-100 text-blue-800'
+            : ' bg-purple-100 text-purple-800'
+        }}"
+      >
+        {{ studyType === "gabinete" ? "Gabinete" : "Laboratorio" }}
+      </span>
+    </div>
+    <span class="text-xs text-gray-400">
+      {{ orderDate }}
+    </span>
+  </div>
+</div>

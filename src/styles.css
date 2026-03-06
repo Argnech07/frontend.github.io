@@ -1,0 +1,91 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.qr-box {
+  width: 128px;
+  height: 128px;
+  overflow: hidden;
+}
+
+.qr-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.qr-svg svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+@media print {
+  .qr-box {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @page {
+    margin: 10mm;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #print-prescription,
+  #print-prescription * {
+    visibility: visible !important;
+  }
+
+  #print-prescription {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* Eliminar todos los bordes en la receta médica */
+  #prescription-container,
+  #prescription-container *,
+  #prescription-container *::before,
+  #prescription-container *::after {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+  }
+}

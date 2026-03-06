@@ -1,0 +1,302 @@
+<section class="p-6">
+  <h1 class="text-xl font-semibold text-gray-800 mb-4">Usuarios</h1>
+
+  @if (apiOffline()) {
+    <div class="mb-4 p-4 border border-yellow-200 bg-yellow-50 text-yellow-800 rounded">
+      No se pudo conectar con el servidor. Verifica que el backend esté encendido.
+    </div>
+  }
+
+  <div class="grid grid-cols-2 gap-4">
+  <div class="flex flex-col border-r border-gray-200 h-full">
+    <div class="flex-1 overflow-y-auto">
+      <table class="w-full text-sm text-left text-gray-600">
+        <thead
+          class="sticky top-0 text-sm text-gray-700 bg-gray-100 border-b border-gray-300 z-10"
+        >
+          <tr>
+            <th scope="col" class="p-4">
+              <div class="flex items-center">
+                <input
+                  id="select-all-checkbox"
+                  type="checkbox"
+                  (change)="toggleSelectAll($event)"
+                  [checked]="allSelected()"
+                  class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-2 focus:ring-blue-300"
+                />
+                <label for="select-all-checkbox" class="sr-only">
+                  Seleccionar todos
+                </label>
+              </div>
+            </th>
+            <th scope="col" class="px-6 py-3 font-semibold">Nombre</th>
+            <th scope="col" class="px-6 py-3 font-semibold">Procedencia</th>
+            <th scope="col" class="px-6 py-3 font-semibold">Curp</th>
+            <th scope="col" class="px-6 py-3 font-semibold">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of filteredPatients(); track p.id) {
+            <tr
+              class="bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors"
+              [class.bg-blue-50]="isSelected(p.id)"
+            >
+              <td class="w-4 p-4">
+                <div class="flex items-center">
+                  <input
+                    [id]="'patient-checkbox-' + p.id"
+                    type="checkbox"
+                    [checked]="isSelected(p.id)"
+                    (change)="togglePatientSelection(p.id, $event)"
+                    (click)="$event.stopPropagation()"
+                    class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-2 focus:ring-blue-300"
+                  />
+                  <label [for]="'patient-checkbox-' + p.id" class="sr-only">
+                    Seleccionar paciente
+                  </label>
+                </div>
+              </td>
+
+              <th
+                scope="row"
+                class="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap"
+              >
+                {{ p | FullNamePipe }}
+              </th>
+
+              <td class="px-6 py-4">Derechohabiente</td>
+              <td class="px-6 py-4">{{ p.curp || 'N/A' }}</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <span
+                    class="w-3 h-3 rounded-full mr-2"
+                    [class.bg-green-500]="p.is_active"
+                    [class.bg-red-500]="!p.is_active"
+                  ></span>
+                  <span
+                    class="font-medium"
+                    [class.text-green-700]="p.is_active"
+                    [class.text-red-700]="!p.is_active"
+                  >
+                    {{ p.is_active ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex items-center gap-3 w-full mt-3">
+      <div class="relative flex-1">
+        <div
+          class="absolute inset-y-0 left-3 flex items-center pointer-events-none"
+        >
+          <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+        </div>
+        <input
+          type="text"
+          placeholder="Buscar pacientes..."
+          class="w-full h-12 pl-10 pr-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          (input)="onSearchChange($any($event.target).value)"
+        />
+      </div>
+
+      <div class="relative">
+        <select
+          (change)="onStatusFilterChange($any($event.target).value)"
+          [value]="statusFilter()"
+          class="h-12 pl-4 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm appearance-none cursor-pointer"
+        >
+          <option value="all">Todos</option>
+          <option value="active">Activos</option>
+          <option value="inactive">Inactivos</option>
+        </select>
+        <div
+          class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+        >
+          <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+        </div>
+      </div>
+
+      <button
+        class="flex items-center justify-center px-4 h-12 rounded-lg transition-colors duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        [class.border]="true"
+        [class.border-green-200]="shouldActivate()"
+        [class.text-green-600]="shouldActivate()"
+        [class.hover:bg-green-50]="shouldActivate()"
+        [class.hover:border-green-300]="shouldActivate()"
+        [class.border-red-200]="!shouldActivate()"
+        [class.text-red-600]="!shouldActivate()"
+        [class.hover:bg-red-50]="!shouldActivate()"
+        [class.hover:border-red-300]="!shouldActivate()"
+        type="button"
+        (click)="toggleSelectedPatients()"
+        [disabled]="selectedIds().size === 0 || isToggling()"
+      >
+        @if (isToggling()) {
+          <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+        } @else {
+          <i
+            class="fa-solid mr-2"
+            [class.fa-toggle-on]="!shouldActivate()"
+            [class.fa-toggle-off]="shouldActivate()"
+          ></i>
+        }
+        {{ shouldActivate() ? 'Activar' : 'Desactivar' }} ({{
+          selectedIds().size
+        }})
+      </button>
+    </div>
+
+    <div class="mt-3 flex items-center justify-between text-sm text-gray-600">
+      <div>
+        Mostrando
+        <span class="font-semibold"> {{ filteredPatients().length }} </span>
+        de
+        <span class="font-semibold"> {{ totalCount() }} </span>
+        pacientes
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          type="button"
+          (click)="prevPage()"
+          [disabled]="!canPrev()"
+        >
+          Anterior
+        </button>
+        <button
+          class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          type="button"
+          (click)="nextPage()"
+          [disabled]="!canNext()"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="h-full p-4">
+    <div class="h-full overflow-y-auto space-y-4">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">
+        Solicitudes de estudios pendientes
+      </h3>
+
+      @if (pendingStudyOrders().length === 0) {
+        <div class="text-center text-gray-400 py-8">
+          <i class="fa-solid fa-clipboard-list text-4xl mb-3"></i>
+          <p class="text-sm font-medium">No hay solicitudes pendientes</p>
+        </div>
+      } @else {
+        @for (order of pendingStudyOrders(); track order.id) {
+          <div class="rounded-md p-6 border border-gray-200 shadow-sm">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                  Solicitud de estudios
+                </h3>
+                <span class="text-xs text-gray-500">
+                  #SOL-{{ order.id }} · {{ formatOrderDate(order.order_date) }}
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div class="space-y-2">
+                <p class="text-sm text-gray-600">
+                  <strong>Paciente:</strong> {{ getPatientName(order) }}
+                </p>
+                <p class="text-sm text-gray-600">
+                  <strong>Médico:</strong> {{ getDoctorName(order) }}
+                </p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600"><strong>Razón:</strong></p>
+                <p class="text-sm text-gray-700 mt-1">
+                  {{ getOrderReason(order) }}
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="flex items-center justify-end gap-2 pt-4 border-t border-gray-100"
+            >
+              <button
+                class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                (click)="viewStudyOrderDetails(order.id)"
+                [disabled]="loadingStudyOrder()"
+              >
+                @if (loadingStudyOrder() && selectedStudyOrder()?.id === order.id) {
+                  <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                }
+                Ver estudios
+                @if (selectedStudyOrder()?.id === order.id) {
+                  ({{ selectedStudyOrder()!.items.length }})
+                }
+              </button>
+              <button
+                class="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                (click)="approveStudyOrder(order.id)"
+                [disabled]="approvingOrder()"
+              >
+                @if (approvingOrder() && selectedStudyOrder()?.id === order.id) {
+                  <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                }
+                Aprobar
+              </button>
+            </div>
+
+            @if (selectedStudyOrder()?.id === order.id && !loadingStudyOrder()) {
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <h4 class="font-semibold text-gray-800 mb-3">
+                  Estudios solicitados ({{ selectedStudyOrder()!.items.length }})
+                </h4>
+                <div class="space-y-2">
+                  @for (item of selectedStudyOrder()!.items; track item.id) {
+                    <div class="p-3 bg-gray-50 rounded border border-gray-200">
+                      <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                          <p class="font-medium text-gray-800">{{ item.name }}</p>
+                          <p class="text-xs text-gray-600 mt-1">
+                            Tipo: {{ item.study_type }}
+                          </p>
+                          <p class="text-xs text-gray-600">
+                            Doctor asignado: {{ item.assigned_doctor }}
+                          </p>
+                          <p class="text-sm text-gray-700 mt-2">
+                            {{ item.reason }}
+                          </p>
+                        </div>
+                        <span
+                          class="px-2 py-1 text-xs rounded"
+                          [class.bg-yellow-100]="item.status === 'pending'"
+                          [class.text-yellow-800]="item.status === 'pending'"
+                          [class.bg-green-100]="item.status === 'approved'"
+                          [class.text-green-800]="item.status === 'approved'"
+                          [class.bg-blue-100]="item.status === 'completed'"
+                          [class.text-blue-800]="item.status === 'completed'"
+                        >
+                          @if (item.status === 'pending') {
+                            Pendiente
+                          } @else if (item.status === 'approved') {
+                            Aprobado
+                          } @else {
+                            Completado
+                          }
+                        </span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+  </div>
+</section>
