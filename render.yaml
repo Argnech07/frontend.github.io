@@ -7,7 +7,7 @@ services:
     name: vitacare-frontend
     runtime: static
     buildCommand: npm run build
-    staticPublishPath: dist/vita-care
+    staticPublishPath: dist/vita-care/browser
     # SPA routing - redirigir todas las rutas a index.html
     routes:
       - type: rewrite
