@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "VitaCare": {
+    "vita-care": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/vita-care",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -54,10 +54,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "VitaCare:build:production"
+              "buildTarget": "vita-care:build:production"
             },
             "development": {
-              "buildTarget": "VitaCare:build:development"
+              "buildTarget": "vita-care:build:development"
             }
           },
           "defaultConfiguration": "development"
